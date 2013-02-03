@@ -1,0 +1,6 @@
+mt_db/interface
+mt_db/server_coarse
+mt_db/server_fine
+mt_db/server_rw
+
+*.swp

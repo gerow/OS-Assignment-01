@@ -1,0 +1,19 @@
+diff -ruN ./mt_db/window.c /usr/home/faber/src/cs402/mt_db/mt_db/window.c
+--- ./mt_db/window.c	2013-01-28 18:21:43.000000000 -0800
++++ /usr/home/faber/src/cs402/mt_db/mt_db/window.c	2013-02-01 08:09:07.000000000 -0800
+@@ -130,6 +130,7 @@
+     if (!new_window) return 0;
+     new_window->ififo = NULL;
+     new_window->ofifo = NULL;
++    new_window->pid = -1;
+     new_window->echo = 1;
+     if ( !(new_window->in = fopen(infn, "r")) || 
+ 	    !(new_window->out = fopen(outfn, "w"))) {
+@@ -137,7 +138,6 @@
+ 	return NULL;
+     }
+     window_count++;
+-    new_window->pid = -1;
+     return new_window;
+ }
+ 
