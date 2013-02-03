@@ -111,15 +111,50 @@ int handle_command(char *command, char *response, int len) {
     return 1;
 }
 
-void create_client() {
+void *client_main(void *arg) {
+  client_run(arg);
+  client_destroy(arg);
+}
 
+void create_client() {
+  static int started = 0;
+  client_t *c = NULL;
+
+  c = client_create(started++);
+
+  pthread_t *thread_id = malloc(sizeof(*thread_id));
+  pthread_create(thread_id, NULL, client_main, c);  
+}
+
+void handle_main_command(char *command, char *response, int len) {
+  switch (command[0]) {
+    case 'e':
+      strncpy(response, "creating new interactive client", len);
+      create_client();
+      break;
+    case 'E':
+      strncpy(response, "unimplemented", len);
+      break;
+    case 's':
+      strncpy(response, "unimplemented", len);
+      break;
+    case 'g':
+      strncpy(response, "unimplemented", len);
+      break;
+    case 'w':
+      strncpy(response, "unimplemented", len);
+      break;
+    default:
+      strncpy(response, "ill-formed command", len);
+      break;
+  }
 }
 
 int main(int argc, char *argv[]) {
     client_t *c = NULL;	    /* A client to serve */
     int started = 0;	    /* Number of clients started */
+    char command[256] = { '\0' };
     char response[256] = { '\0' };
-    int i = 0;
 
     if (argc != 1) {
 	fprintf(stderr, "Usage: server\n");
@@ -129,10 +164,9 @@ int main(int argc, char *argv[]) {
 
     for (;;) {
       fprintf(stdout, ">>> ");
-      fgets(response, sizeof(response), stdin);
-      for (i = 0; (response[i] != '\0') && (response[i] != '\n'); i++) {
-        fprintf(stdout, "Handling character %c!\n", response[i]);
-      }
+      fgets(command, sizeof(command), stdin);
+      handle_main_command(command, response, sizeof(response));
+      fprintf(stdout, "%s\n", response);
     }
 
     if ((c = client_create(started++)) )  {
