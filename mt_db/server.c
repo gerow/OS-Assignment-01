@@ -111,13 +111,28 @@ int handle_command(char *command, char *response, int len) {
     return 1;
 }
 
+void create_client() {
+
+}
+
 int main(int argc, char *argv[]) {
     client_t *c = NULL;	    /* A client to serve */
     int started = 0;	    /* Number of clients started */
+    char response[256] = { '\0' };
+    int i = 0;
 
     if (argc != 1) {
 	fprintf(stderr, "Usage: server\n");
 	exit(1);
+    }
+
+
+    for (;;) {
+      fprintf(stdout, ">>> ");
+      fgets(response, sizeof(response), stdin);
+      for (i = 0; (response[i] != '\0') && (response[i] != '\n'); i++) {
+        fprintf(stdout, "Handling character %c!\n", response[i]);
+      }
     }
 
     if ((c = client_create(started++)) )  {
