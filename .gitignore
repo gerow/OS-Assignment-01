@@ -4,3 +4,4 @@ mt_db/server_fine
 mt_db/server_rw
 
 *.swp
+mt_db/*.o
