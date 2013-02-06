@@ -23,7 +23,7 @@
 typedef struct Client client_t;
 typedef struct ThreadHandler thread_handler_t;
 
-typedef struct Client {
+struct Client {
         int id;
 	pthread_t thread;
 	window_t *win;
@@ -32,7 +32,7 @@ typedef struct Client {
         struct Client* next;
 };
 
-typedef struct ThreadHandler {
+struct ThreadHandler {
   client_t* clients;
   pthread_mutex_t clients_mutex;
   pthread_t thread;
@@ -100,7 +100,9 @@ void client_destroy(client_t *client) {
 	/* Remove the window */
 	window_destroy(client->win);
 	//free(client); Let the handler take care of this
+        client->done = true;
         pthread_cond_signal(&client->thread_handler->thread_done_cond);
+        pthread_exit(NULL);
 }
 
 /* Code executed by the client */
@@ -151,8 +153,8 @@ void create_client(thread_handler_t* thread_handler) {
   // Unlock the clients list
   pthread_mutex_unlock(&thread_handler->clients_mutex);
 
-  c->thread = malloc(sizeof(c->thread));
-  pthread_create(c->thread, NULL, client_main, c); 
+  //c->thread = malloc(sizeof(c->thread));
+  pthread_create(&c->thread, NULL, client_main, c); 
 }
 
 void handle_main_command(char *command, char *response, int len, thread_handler_t* thread_handler) {
@@ -188,6 +190,31 @@ void *thread_handler_main(void *arg)
   for (;;) {
     pthread_cond_wait(&t->thread_done_cond, &t->clients_mutex);
     fprintf(stdout, "Condition triggered!\n");
+    client_t *client = t->clients;
+    client_t *last = NULL;
+    while (client != NULL) {
+      if (client->done) {
+        int rc = 0;
+        void* status;
+        //This is one of the threads we're looking for!
+        //So kill it!
+        rc = pthread_join(&client->thread, &status);
+        if (rc) {
+          fprintf(stderr, "ERROR: pthread_join returned %d", rc);
+        }
+        fprintf(stdout, "Client %i exited with status %i\n", client->id, (long)status); 
+        if (last == NULL) {
+          t->clients = client->next;
+        } else {
+          last->next = client->next;
+        }
+        client = client->next;
+        // Deallocate everything
+      } else {
+        last = client;
+        client = client->next;
+      }
+    }
   }
 }
 
