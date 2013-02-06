@@ -20,18 +20,24 @@
 
 /* the encapsulation of a client thread, i.e., the thread that handles
  * commands from clients */
+typedef struct Client client_t;
+typedef struct ThreadHandler thread_handler_t;
+
 typedef struct Client {
+        int id;
 	pthread_t thread;
 	window_t *win;
         volatile bool done;
+        thread_handler_t* thread_handler;
         struct Client* next;
-} client_t;
+};
 
 typedef struct ThreadHandler {
   client_t* clients;
   pthread_mutex_t clients_mutex;
   pthread_t thread;
-} thread_handler_t;
+  pthread_cond_t thread_done_cond;
+};
 
 /* Interface with a client: get requests, carry them out and report results */
 void *client_run(void *);
@@ -45,11 +51,13 @@ int handle_command(char *, char *, int len);
  * returned and no process started.  The client data structure returned must be
  * destroyed using client_destroy()
  */
-client_t *client_create(int ID) {
+client_t *client_create(int ID, thread_handler_t* thread_handler) {
     client_t *new_Client = (client_t *) malloc(sizeof(client_t));
     char title[16];
     new_Client->done = false;
     new_Client->next = NULL;
+    new_Client->thread_handler = thread_handler;
+    new_Client->id = ID;
 
     if (!new_Client) return NULL;
 
@@ -91,7 +99,8 @@ client_t *client_create_no_window(char *in, char *out) {
 void client_destroy(client_t *client) {
 	/* Remove the window */
 	window_destroy(client->win);
-	free(client);
+	//free(client); Let the handler take care of this
+        pthread_cond_signal(&client->thread_handler->thread_done_cond);
 }
 
 /* Code executed by the client */
@@ -131,11 +140,8 @@ void create_client(thread_handler_t* thread_handler) {
   static int started = 0;
   client_t *c = NULL;
 
-  c = client_create(started++);
+  c = client_create(started++, thread_handler);
 
-  c->thread = malloc(sizeof(c->thread));
-  pthread_create(c->thread, NULL, client_main, c); 
-  
   // Add this thread's info to the clients linked list
   // First lock the list
   pthread_mutex_lock(&thread_handler->clients_mutex);
@@ -145,6 +151,8 @@ void create_client(thread_handler_t* thread_handler) {
   // Unlock the clients list
   pthread_mutex_unlock(&thread_handler->clients_mutex);
 
+  c->thread = malloc(sizeof(c->thread));
+  pthread_create(c->thread, NULL, client_main, c); 
 }
 
 void handle_main_command(char *command, char *response, int len, thread_handler_t* thread_handler) {
@@ -173,9 +181,21 @@ void handle_main_command(char *command, char *response, int len, thread_handler_
 
 void *thread_handler_main(void *arg)
 {
-  thread_handler_t *data = arg;
+  thread_handler_t *t = arg;
 
+  
+  pthread_mutex_lock(&t->clients_mutex);
+  for (;;) {
+    pthread_cond_wait(&t->thread_done_cond, &t->clients_mutex);
+    fprintf(stdout, "Condition triggered!\n");
+  }
+}
 
+void init_thread_handler(thread_handler_t* t)
+{
+  t->clients = NULL;
+  pthread_mutex_init(&t->clients_mutex, NULL);
+  pthread_cond_init(&t->thread_done_cond, NULL);
 }
 
 int main(int argc, char *argv[]) {
@@ -185,8 +205,7 @@ int main(int argc, char *argv[]) {
     char response[256] = { '\0' };
     thread_handler_t thread_handler;
     //Initialize thread_handler
-    thread_handler.clients = NULL;
-    pthread_mutex_init(&thread_handler.clients_mutex, NULL);
+    init_thread_handler(&thread_handler);
 
     if (argc != 1) {
 	fprintf(stderr, "Usage: server\n");
@@ -204,12 +223,6 @@ int main(int argc, char *argv[]) {
       fprintf(stdout, "%s\n", response);
     }
 
-    if ((c = client_create(started++)) )  {
-	client_run(c);
-	client_destroy(c);
-    }
-    fprintf(stderr, "Terminating.");
-    /* Clean up the window data */
     window_cleanup();
     return 0;
 }
