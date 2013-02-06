@@ -1,4 +1,4 @@
-CC = gcc
+CC = clang 
 CFLAGS = -g -I. -Wall 
 LDFLAGS = -pthread
 

@@ -16,13 +16,22 @@
 #include <sys/time.h>
 #include <time.h>
 #include <signal.h>
+#include <stdbool.h>
 
 /* the encapsulation of a client thread, i.e., the thread that handles
  * commands from clients */
 typedef struct Client {
 	pthread_t thread;
 	window_t *win;
+        volatile bool done;
+        struct Client* next;
 } client_t;
+
+typedef struct ThreadHandler {
+  client_t* clients;
+  pthread_mutex_t clients_mutex;
+  pthread_t thread;
+} thread_handler_t;
 
 /* Interface with a client: get requests, carry them out and report results */
 void *client_run(void *);
@@ -39,6 +48,8 @@ int handle_command(char *, char *, int len);
 client_t *client_create(int ID) {
     client_t *new_Client = (client_t *) malloc(sizeof(client_t));
     char title[16];
+    new_Client->done = false;
+    new_Client->next = NULL;
 
     if (!new_Client) return NULL;
 
@@ -116,21 +127,31 @@ void *client_main(void *arg) {
   client_destroy(arg);
 }
 
-void create_client() {
+void create_client(thread_handler_t* thread_handler) {
   static int started = 0;
   client_t *c = NULL;
 
   c = client_create(started++);
 
-  pthread_t *thread_id = malloc(sizeof(*thread_id));
-  pthread_create(thread_id, NULL, client_main, c);  
+  c->thread = malloc(sizeof(c->thread));
+  pthread_create(c->thread, NULL, client_main, c); 
+  
+  // Add this thread's info to the clients linked list
+  // First lock the list
+  pthread_mutex_lock(&thread_handler->clients_mutex);
+  // Throw it on the beginning of the list
+  c->next = thread_handler->clients;
+  thread_handler->clients = c;
+  // Unlock the clients list
+  pthread_mutex_unlock(&thread_handler->clients_mutex);
+
 }
 
-void handle_main_command(char *command, char *response, int len) {
+void handle_main_command(char *command, char *response, int len, thread_handler_t* thread_handler) {
   switch (command[0]) {
     case 'e':
       strncpy(response, "creating new interactive client", len);
-      create_client();
+      create_client(thread_handler);
       break;
     case 'E':
       strncpy(response, "unimplemented", len);
@@ -150,22 +171,36 @@ void handle_main_command(char *command, char *response, int len) {
   }
 }
 
+void *thread_handler_main(void *arg)
+{
+  thread_handler_t *data = arg;
+
+
+}
+
 int main(int argc, char *argv[]) {
     client_t *c = NULL;	    /* A client to serve */
     int started = 0;	    /* Number of clients started */
     char command[256] = { '\0' };
     char response[256] = { '\0' };
+    thread_handler_t thread_handler;
+    //Initialize thread_handler
+    thread_handler.clients = NULL;
+    pthread_mutex_init(&thread_handler.clients_mutex, NULL);
 
     if (argc != 1) {
 	fprintf(stderr, "Usage: server\n");
 	exit(1);
     }
 
+    // Launch the thread handler
+    pthread_create(&thread_handler.thread, NULL, thread_handler_main, &thread_handler);
+
 
     for (;;) {
       fprintf(stdout, ">>> ");
       fgets(command, sizeof(command), stdin);
-      handle_main_command(command, response, sizeof(response));
+      handle_main_command(command, response, sizeof(response), &thread_handler);
       fprintf(stdout, "%s\n", response);
     }
 
