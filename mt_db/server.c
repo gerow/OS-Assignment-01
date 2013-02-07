@@ -192,20 +192,21 @@ void reap_done_clients(client_t **client)
   while ((*client) != NULL) {
     if ((*client)->done) {
       int rc = 0;
-      void* status;
       //This is one of the threads we're looking for!
       //So kill it!
-      rc = pthread_join(&(*client)->thread, &status);
+      rc = pthread_join((*client)->thread, NULL);
       if (rc) {
         fprintf(stderr, "ERROR: pthread_join returned %d", rc);
       }
-      fprintf(stdout, "Client %i exited with status %i\n", (*client)->id, (long)status); 
+      fprintf(stdout, "Client %i has exited!\n", (*client)->id); 
       // Deallocate everything
       client_t *clean_me_up = *client;
       (*client) = (*client)->next;
       client_cleanup(clean_me_up);
     } 
-    client = &(*client)->next;
+    else {
+      client = &(*client)->next;
+    }
   }
 }
 
@@ -215,7 +216,6 @@ void *thread_handler_main(void *arg)
   pthread_mutex_lock(&t->clients_mutex);
   for (;;) {
     pthread_cond_wait(&t->thread_done_cond, &t->clients_mutex);
-    fprintf(stdout, "Condition triggered!\n");
     reap_done_clients(&t->clients);
   }
 }
