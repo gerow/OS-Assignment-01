@@ -105,6 +105,10 @@ void client_destroy(client_t *client) {
         pthread_exit(NULL);
 }
 
+void client_cleanup(client_t *client) {
+  free(client);
+}
+
 /* Code executed by the client */
 void *client_run(void *arg)
 {
@@ -181,40 +185,38 @@ void handle_main_command(char *command, char *response, int len, thread_handler_
   }
 }
 
+void reap_done_clients(client_t **client)
+{
+  if (*(client) == NULL) { return; } // There aren't any clients!
+
+  while ((*client) != NULL) {
+    if ((*client)->done) {
+      int rc = 0;
+      void* status;
+      //This is one of the threads we're looking for!
+      //So kill it!
+      rc = pthread_join(&(*client)->thread, &status);
+      if (rc) {
+        fprintf(stderr, "ERROR: pthread_join returned %d", rc);
+      }
+      fprintf(stdout, "Client %i exited with status %i\n", (*client)->id, (long)status); 
+      // Deallocate everything
+      client_t *clean_me_up = *client;
+      (*client) = (*client)->next;
+      client_cleanup(clean_me_up);
+    } 
+    client = &(*client)->next;
+  }
+}
+
 void *thread_handler_main(void *arg)
 {
   thread_handler_t *t = arg;
-
-  
   pthread_mutex_lock(&t->clients_mutex);
   for (;;) {
     pthread_cond_wait(&t->thread_done_cond, &t->clients_mutex);
     fprintf(stdout, "Condition triggered!\n");
-    client_t *client = t->clients;
-    client_t *last = NULL;
-    while (client != NULL) {
-      if (client->done) {
-        int rc = 0;
-        void* status;
-        //This is one of the threads we're looking for!
-        //So kill it!
-        rc = pthread_join(&client->thread, &status);
-        if (rc) {
-          fprintf(stderr, "ERROR: pthread_join returned %d", rc);
-        }
-        fprintf(stdout, "Client %i exited with status %i\n", client->id, (long)status); 
-        if (last == NULL) {
-          t->clients = client->next;
-        } else {
-          last->next = client->next;
-        }
-        client = client->next;
-        // Deallocate everything
-      } else {
-        last = client;
-        client = client->next;
-      }
-    }
+    reap_done_clients(&t->clients);
   }
 }
 
