@@ -1,0 +1,104 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ALL	Makefile	/^ALL=server_coarse server_fine server_rw interface$/;"	m
+CC	Makefile	/^CC = clang $/;"	m
+CFLAGS	Makefile	/^CFLAGS = -g -I. -Wall $/;"	m
+Client	server.c	/^struct Client {$/;"	s	file:
+FNLEN	window.c	17;"	d	file:
+LDFLAGS	Makefile	/^LDFLAGS = -pthread$/;"	m
+Node	db.h	/^typedef struct Node {$/;"	s
+ThreadHandler	server.c	/^struct ThreadHandler {$/;"	s	file:
+WORDS_H	words.h	2;"	d
+_WITH_GETLINE	interface.c	1;"	d	file:
+_WITH_GETLINE	server.c	3;"	d	file:
+_WITH_GETLINE	window.c	1;"	d	file:
+add	db_coarse.c	/^int add(char *name, char *value) {$/;"	f
+add	db_fine.c	/^int add(char *name, char *value) {$/;"	f
+add	db_rw.c	/^int add(char *name, char *value) {$/;"	f
+add_word	words.c	/^static char **add_word(char **words, int *cap, int n, char *word) {$/;"	f	file:
+client_cleanup	server.c	/^void client_cleanup(client_t *client) {$/;"	f
+client_create	server.c	/^client_t *client_create(int ID, thread_handler_t* thread_handler) {$/;"	f
+client_create_no_window	server.c	/^client_t *client_create_no_window(char *in, char *out) {$/;"	f
+client_destroy	server.c	/^void client_destroy(client_t *client) {$/;"	f
+client_main	server.c	/^void *client_main(void *arg) {$/;"	f
+client_run	server.c	/^void *client_run(void *arg)$/;"	f
+client_t	server.c	/^typedef struct Client client_t;$/;"	t	typeref:struct:Client	file:
+clients	server.c	/^  client_t* clients;$/;"	m	struct:ThreadHandler	file:
+clients_mutex	server.c	/^  pthread_mutex_t clients_mutex;$/;"	m	struct:ThreadHandler	file:
+create_client	server.c	/^void create_client(thread_handler_t* thread_handler) {$/;"	f
+create_fifos	window.c	/^static int create_fifos(window_t *new_window) {$/;"	f	file:
+done	server.c	/^        volatile bool done;$/;"	m	struct:Client	file:
+echo	window.h	/^	int echo;$/;"	m	struct:window
+find_white	words.c	/^static inline char *find_white(char *s) {$/;"	f	file:
+free_words	words.c	/^void free_words(char **words) {$/;"	f
+gotint	interface.c	/^int gotint = 0;$/;"	v
+handle_command	server.c	/^int handle_command(char *command, char *response, int len) {$/;"	f
+handle_main_command	server.c	/^void handle_main_command(char *command, char *response, int len, thread_handler_t* thread_handler) {$/;"	f
+head	db_coarse.c	/^node_t head = { "", "", 0, 0 };$/;"	v
+head	db_fine.c	/^node_t head = { "", "", 0, 0 };$/;"	v
+head	db_rw.c	/^node_t head = { "", "", 0, 0 };$/;"	v
+id	server.c	/^        int id;$/;"	m	struct:Client	file:
+ififo	window.h	/^	char *ififo;$/;"	m	struct:window
+in	window.h	/^	FILE *in;$/;"	m	struct:window
+init_thread_handler	server.c	/^void init_thread_handler(thread_handler_t* t)$/;"	f
+interpret_command	db_coarse.c	/^void interpret_command(char *command, char *response, int len)$/;"	f
+interpret_command	db_fine.c	/^void interpret_command(char *command, char *response, int len)$/;"	f
+interpret_command	db_rw.c	/^void interpret_command(char *command, char *response, int len)$/;"	f
+lchild	db.h	/^	struct Node *lchild;$/;"	m	struct:Node	typeref:struct:Node::Node
+main	interface.c	/^int main(int argc, const char *argv[]) {$/;"	f
+main	server.c	/^int main(int argc, char *argv[]) {$/;"	f
+main	words.c	/^int main(int argc, char **argv) {$/;"	f
+make_tempdir	window.c	/^static int make_tempdir() {$/;"	f	file:
+name	db.h	/^	char *name;$/;"	m	struct:Node
+next	server.c	/^        struct Client* next;$/;"	m	struct:Client	typeref:struct:Client::Client	file:
+node_create	db_coarse.c	/^node_t *node_create(char *arg_name, char *arg_value, node_t * arg_left,$/;"	f
+node_create	db_fine.c	/^node_t *node_create(char *arg_name, char *arg_value, node_t * arg_left,$/;"	f
+node_create	db_rw.c	/^node_t *node_create(char *arg_name, char *arg_value, node_t * arg_left,$/;"	f
+node_destroy	db_coarse.c	/^void node_destroy(node_t * node) {$/;"	f
+node_destroy	db_fine.c	/^void node_destroy(node_t * node) {$/;"	f
+node_destroy	db_rw.c	/^void node_destroy(node_t * node) {$/;"	f
+node_t	db.h	/^} node_t;$/;"	t	typeref:struct:Node
+nowindow_create	window.c	/^window_t *nowindow_create(char *infn, char *outfn) {$/;"	f
+ofifo	window.h	/^	char *ofifo;$/;"	m	struct:window
+out	window.h	/^	FILE *out;$/;"	m	struct:window
+pid	window.h	/^	int pid;$/;"	m	struct:window
+query	db_coarse.c	/^void query(char *name, char *result, int len) {$/;"	f
+query	db_fine.c	/^void query(char *name, char *result, int len) {$/;"	f
+query	db_rw.c	/^void query(char *name, char *result, int len) {$/;"	f
+rchild	db.h	/^	struct Node *rchild;$/;"	m	struct:Node	typeref:struct:Node::Node
+reap_done_clients	server.c	/^void reap_done_clients(client_t **client)$/;"	f
+search	db_coarse.c	/^node_t *search(char *name, node_t * parent, node_t ** parentpp) {$/;"	f
+search	db_fine.c	/^node_t *search(char *name, node_t * parent, node_t ** parentpp) {$/;"	f
+search	db_rw.c	/^node_t *search(char *name, node_t * parent, node_t ** parentpp) {$/;"	f
+serve	window.c	/^int serve(window_t * window, char *response, char **query, size_t *qlen) {$/;"	f
+sigint	interface.c	/^void sigint() { gotint = 1; }$/;"	f
+skip_white	words.c	/^static inline char *skip_white(char *s) {$/;"	f	file:
+split_words	words.c	/^char **split_words(char *in_line) {$/;"	f
+strip_nl	words.c	/^static inline void strip_nl(char *s) {$/;"	f	file:
+swap_pointers	db_coarse.c	/^static inline void swap_pointers(char **a, char **b) {$/;"	f	file:
+swap_pointers	db_fine.c	/^static inline void swap_pointers(char **a, char **b) {$/;"	f	file:
+swap_pointers	db_rw.c	/^static inline void swap_pointers(char **a, char **b) {$/;"	f	file:
+template	window.c	/^static char *template = "\/tmp\/serverXXXXXX";$/;"	v	file:
+terminate	interface.c	/^void terminate() {$/;"	f
+thread	server.c	/^	pthread_t thread;$/;"	m	struct:Client	file:
+thread	server.c	/^  pthread_t thread;$/;"	m	struct:ThreadHandler	file:
+thread_done_cond	server.c	/^  pthread_cond_t thread_done_cond;$/;"	m	struct:ThreadHandler	file:
+thread_handler	server.c	/^        thread_handler_t* thread_handler;$/;"	m	struct:Client	file:
+thread_handler_main	server.c	/^void *thread_handler_main(void *arg)$/;"	f
+thread_handler_t	server.c	/^typedef struct ThreadHandler thread_handler_t;$/;"	t	typeref:struct:ThreadHandler	file:
+tmpdir	window.c	/^char *tmpdir= NULL;$/;"	v
+value	db.h	/^	char *value;$/;"	m	struct:Node
+win	server.c	/^	window_t *win;$/;"	m	struct:Client	file:
+window	window.h	/^typedef struct window {$/;"	s
+window_cleanup	window.c	/^void window_cleanup() {$/;"	f
+window_count	window.c	/^int window_count = 0;$/;"	v
+window_create	window.c	/^window_t *window_create(char *label) {$/;"	f
+window_destroy	window.c	/^void window_destroy(window_t * win) {$/;"	f
+window_t	window.h	/^} window_t;$/;"	t	typeref:struct:window
+xremove	db_coarse.c	/^int xremove(char *name) {$/;"	f
+xremove	db_fine.c	/^int xremove(char *name) {$/;"	f
+xremove	db_rw.c	/^int xremove(char *name) {$/;"	f
