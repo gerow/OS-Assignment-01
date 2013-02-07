@@ -140,6 +140,11 @@ int handle_command(char *command, char *response, int len) {
 void *client_main(void *arg) {
   client_run(arg);
   client_destroy(arg);
+
+  // Get the compiler to shut up
+  // about no return value.
+  // Either way we should never reach here.
+  return NULL;
 }
 
 void create_client(thread_handler_t* thread_handler) {
@@ -228,8 +233,6 @@ void init_thread_handler(thread_handler_t* t)
 }
 
 int main(int argc, char *argv[]) {
-    client_t *c = NULL;	    /* A client to serve */
-    int started = 0;	    /* Number of clients started */
     char command[256] = { '\0' };
     char response[256] = { '\0' };
     thread_handler_t thread_handler;
