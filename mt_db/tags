@@ -68,6 +68,10 @@ node_t	db.h	/^} node_t;$/;"	t	typeref:struct:Node
 nowindow_create	window.c	/^window_t *nowindow_create(char *infn, char *outfn) {$/;"	f
 ofifo	window.h	/^	char *ofifo;$/;"	m	struct:window
 out	window.h	/^	FILE *out;$/;"	m	struct:window
+pause	server.c	/^  bool pause;$/;"	m	struct:ThreadHandler	file:
+pause_clients	server.c	/^void pause_clients()$/;"	f
+pause_cond	server.c	/^  pthread_cond_t pause_cond;$/;"	m	struct:ThreadHandler	file:
+pause_mutex	server.c	/^  pthread_mutex_t pause_mutex;$/;"	m	struct:ThreadHandler	file:
 pid	window.h	/^	int pid;$/;"	m	struct:window
 query	db_coarse.c	/^void query(char *name, char *result, int len) {$/;"	f
 query	db_fine.c	/^void query(char *name, char *result, int len) {$/;"	f
@@ -94,7 +98,9 @@ thread_handler	server.c	/^  thread_handler_t* thread_handler;$/;"	m	struct:Clien
 thread_handler_main	server.c	/^void *thread_handler_main(void *arg)$/;"	f
 thread_handler_t	server.c	/^typedef struct ThreadHandler thread_handler_t;$/;"	t	typeref:struct:ThreadHandler	file:
 tmpdir	window.c	/^char *tmpdir= NULL;$/;"	v
+unpause_clients	server.c	/^void unpause_clients()$/;"	f
 value	db.h	/^	char *value;$/;"	m	struct:Node
+wait_on_pause	server.c	/^static inline void wait_on_pause()$/;"	f	file:
 win	server.c	/^  window_t *win;$/;"	m	struct:Client	file:
 window	window.h	/^typedef struct window {$/;"	s
 window_cleanup	window.c	/^void window_cleanup() {$/;"	f

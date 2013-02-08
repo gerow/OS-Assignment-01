@@ -37,6 +37,9 @@ struct ThreadHandler {
   pthread_mutex_t clients_mutex;
   pthread_t thread;
   pthread_cond_t thread_done_cond;
+  bool pause;
+  pthread_cond_t pause_cond;
+  pthread_mutex_t pause_mutex;
 };
 
 /* Interface with a client: get requests, carry them out and report results */
@@ -121,6 +124,20 @@ void client_cleanup(client_t *client)
   free(client);
 }
 
+static inline void wait_on_pause()
+{
+  // I'm not sure if this whole double if thing is necessary or not
+  // I feel like it allows us to do a check check on pause (without
+  // needing to lock it) but... yeah.
+  if (g_thread_handler.pause) {
+    pthread_mutex_lock(&g_thread_handler.pause_mutex);
+    if (g_thread_handler.pause) {
+      pthread_cond_wait(&g_thread_handler.pause_cond, &g_thread_handler.pause_mutex);
+    }
+    pthread_mutex_unlock(&g_thread_handler.pause_mutex);
+  }
+}
+
 /* Code executed by the client */
 void *client_run(void *arg)
 {
@@ -135,6 +152,7 @@ void *client_run(void *arg)
 
   /* Serve until the other side closes the pipe */
   while (serve(client->win, response, &command, &clen) != -1) {
+    wait_on_pause();
     handle_command(command, response, sizeof(response));
   }
 
@@ -189,6 +207,21 @@ void create_non_interactive_client(char* fin, char* fout)
   launch_client_thread(c);
 }
 
+void pause_clients()
+{
+  // No need to lock here for a write (I think...)
+  g_thread_handler.pause = true;
+}
+
+void unpause_clients()
+{
+  if (!g_thread_handler.pause) { return; }
+
+  // No need to lock here
+  g_thread_handler.pause = false;
+  pthread_cond_broadcast(&g_thread_handler.pause_cond);
+}
+
 void handle_main_command(char *command) 
 {
   switch (command[0]) {
@@ -212,10 +245,12 @@ void handle_main_command(char *command)
       }
       break;
     case 's':
-      fprintf(stdout, "unimplemented\n");
+      fprintf(stdout, "pausing clients\n");
+      pause_clients();
       break;
     case 'g':
-      fprintf(stdout, "unimplemented\n");
+      fprintf(stdout, "unpausing clients\n");
+      unpause_clients();
       break;
     case 'w':
       fprintf(stdout, "unimplemented\n");
@@ -265,6 +300,9 @@ void init_thread_handler(thread_handler_t* t)
   t->clients = NULL;
   pthread_mutex_init(&t->clients_mutex, NULL);
   pthread_cond_init(&t->thread_done_cond, NULL);
+  pthread_mutex_init(&t->pause_mutex, NULL);
+  pthread_cond_init(&t->pause_cond, NULL);
+  t->pause = false;
 }
 
 int main(int argc, char *argv[]) 
