@@ -231,7 +231,9 @@ void unpause_clients()
 void wait_for_clients_to_exit()
 {
   pthread_mutex_lock(&g_thread_handler.clients_mutex);
-  pthread_cond_wait(&g_thread_handler.threads_done_cond, &g_thread_handler.clients_mutex);
+  if (g_thread_handler.clients != NULL) {
+    pthread_cond_wait(&g_thread_handler.threads_done_cond, &g_thread_handler.clients_mutex);
+  }
   pthread_mutex_unlock(&g_thread_handler.clients_mutex);
 }
 
@@ -328,7 +330,9 @@ void init_thread_handler(thread_handler_t* t)
 
 int main(int argc, char *argv[]) 
 {
-  char command[256] = { '\0' };
+  char* command;
+  size_t command_nbytes = 100;
+  command = malloc(command_nbytes + 1);
   //Initialize thread_handler
   init_thread_handler(&g_thread_handler);
 
@@ -343,7 +347,16 @@ int main(int argc, char *argv[])
 
   for (;;) {
     fprintf(stdout, ">>> ");
-    fgets(command, sizeof(command), stdin);
+    if (getline(&command, &command_nbytes, stdin) == -1) {
+      if (feof(stdin)) {
+        fprintf(stdout, "got EOF, waiting for clients to exit\n");
+      } else {
+        fprintf(stdout, "read error (not EOF), waiting for clients to exit\n");
+      }
+      wait_for_clients_to_exit();
+      fprintf(stdout, "goodbye\n");
+      exit(0);
+    }
     handle_main_command(command);
   }
 
