@@ -51,7 +51,8 @@ int handle_command(char *, char *, int len);
  * returned and no process started.  The client data structure returned must be
  * destroyed using client_destroy()
  */
-client_t *client_create(int ID, thread_handler_t* thread_handler) {
+client_t *client_create(int ID, thread_handler_t* thread_handler) 
+{
     client_t *new_Client = (client_t *) malloc(sizeof(client_t));
     char title[16];
     new_Client->done = false;
@@ -77,7 +78,8 @@ client_t *client_create(int ID, thread_handler_t* thread_handler) {
  * process's standard output) is used.  On error a NULL pointer is returned.
  * The returned client must be disposed of using client_destroy.
  */
-client_t *client_create_no_window(char *in, char *out) {
+client_t *client_create_no_window(char *in, char *out) 
+{
     char *outf = (out) ? out : "/dev/stdout";
     client_t *new_Client = (client_t *) malloc(sizeof(client_t));
     if (!new_Client) return NULL;
@@ -96,7 +98,8 @@ client_t *client_create_no_window(char *in, char *out) {
  * (if any) and process (if any) are all destroyed and freed, and any open
  * files are closed.  Do not access client after calling this function.
  */
-void client_destroy(client_t *client) {
+void client_destroy(client_t *client) 
+{
 	/* Remove the window */
 	window_destroy(client->win);
 	//free(client); Let the handler take care of this
@@ -105,7 +108,8 @@ void client_destroy(client_t *client) {
         pthread_exit(NULL);
 }
 
-void client_cleanup(client_t *client) {
+void client_cleanup(client_t *client) 
+{
   free(client);
 }
 
@@ -128,7 +132,8 @@ void *client_run(void *arg)
 	return 0;
 }
 
-int handle_command(char *command, char *response, int len) {
+int handle_command(char *command, char *response, int len) 
+{
     if (command[0] == EOF) {
 	strncpy(response, "all done", len - 1);
 	return 0;
@@ -137,7 +142,8 @@ int handle_command(char *command, char *response, int len) {
     return 1;
 }
 
-void *client_main(void *arg) {
+void *client_main(void *arg) 
+{
   client_run(arg);
   client_destroy(arg);
 
@@ -147,7 +153,8 @@ void *client_main(void *arg) {
   return NULL;
 }
 
-void create_client(thread_handler_t* thread_handler) {
+void create_client(thread_handler_t* thread_handler) 
+{
   static int started = 0;
   client_t *c = NULL;
 
@@ -166,7 +173,8 @@ void create_client(thread_handler_t* thread_handler) {
   pthread_create(&c->thread, NULL, client_main, c); 
 }
 
-void handle_main_command(char *command, char *response, int len, thread_handler_t* thread_handler) {
+void handle_main_command(char *command, char *response, int len, thread_handler_t* thread_handler) 
+{
   switch (command[0]) {
     case 'e':
       strncpy(response, "creating new interactive client", len);
@@ -232,7 +240,8 @@ void init_thread_handler(thread_handler_t* t)
   pthread_cond_init(&t->thread_done_cond, NULL);
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) 
+{
     char command[256] = { '\0' };
     char response[256] = { '\0' };
     thread_handler_t thread_handler;
