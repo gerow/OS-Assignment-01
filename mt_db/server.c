@@ -40,6 +40,7 @@ struct ThreadHandler {
   bool pause;
   pthread_cond_t pause_cond;
   pthread_mutex_t pause_mutex;
+  pthread_cond_t threads_done_cond;
 };
 
 /* Interface with a client: get requests, carry them out and report results */
@@ -227,6 +228,13 @@ void unpause_clients()
   pthread_cond_broadcast(&g_thread_handler.pause_cond);
 }
 
+void wait_for_clients_to_exit()
+{
+  pthread_mutex_lock(&g_thread_handler.clients_mutex);
+  pthread_cond_wait(&g_thread_handler.threads_done_cond, &g_thread_handler.clients_mutex);
+  pthread_mutex_unlock(&g_thread_handler.clients_mutex);
+}
+
 void handle_main_command(char *command) 
 {
   switch (command[0]) {
@@ -258,7 +266,11 @@ void handle_main_command(char *command)
       unpause_clients();
       break;
     case 'w':
-      fprintf(stdout, "unimplemented\n");
+      fprintf(stdout, "waiting for clients to exit\n");
+      // Make sure the clients are unpaused
+      unpause_clients();
+      wait_for_clients_to_exit();
+      fprintf(stdout, "now ready to take additional commands\n");
       break;
     default:
       fprintf(stdout, "ill-formed command\n");
@@ -297,6 +309,9 @@ void *thread_handler_main(void *arg)
   for (;;) {
     pthread_cond_wait(&g_thread_handler.thread_done_cond, &g_thread_handler.clients_mutex);
     reap_done_clients(&g_thread_handler.clients);
+    if (g_thread_handler.clients == NULL) {
+      pthread_cond_broadcast(&g_thread_handler.threads_done_cond);
+    }
   }
 }
 
@@ -307,6 +322,7 @@ void init_thread_handler(thread_handler_t* t)
   pthread_cond_init(&t->thread_done_cond, NULL);
   pthread_mutex_init(&t->pause_mutex, NULL);
   pthread_cond_init(&t->pause_cond, NULL);
+  pthread_cond_init(&t->threads_done_cond, NULL);
   t->pause = false;
 }
 

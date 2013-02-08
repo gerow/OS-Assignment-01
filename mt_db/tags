@@ -97,9 +97,11 @@ thread_done_cond	server.c	/^  pthread_cond_t thread_done_cond;$/;"	m	struct:Thre
 thread_handler	server.c	/^  thread_handler_t* thread_handler;$/;"	m	struct:Client	file:
 thread_handler_main	server.c	/^void *thread_handler_main(void *arg)$/;"	f
 thread_handler_t	server.c	/^typedef struct ThreadHandler thread_handler_t;$/;"	t	typeref:struct:ThreadHandler	file:
+threads_done_cond	server.c	/^  pthread_cond_t threads_done_cond;$/;"	m	struct:ThreadHandler	file:
 tmpdir	window.c	/^char *tmpdir= NULL;$/;"	v
 unpause_clients	server.c	/^void unpause_clients()$/;"	f
 value	db.h	/^	char *value;$/;"	m	struct:Node
+wait_for_clients_to_exit	server.c	/^void wait_for_clients_to_exit()$/;"	f
 wait_on_pause	server.c	/^static inline void wait_on_pause()$/;"	f	file:
 win	server.c	/^  window_t *win;$/;"	m	struct:Client	file:
 window	window.h	/^typedef struct window {$/;"	s
