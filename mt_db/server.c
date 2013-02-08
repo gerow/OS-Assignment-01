@@ -24,12 +24,12 @@ typedef struct Client client_t;
 typedef struct ThreadHandler thread_handler_t;
 
 struct Client {
-        int id;
-	pthread_t thread;
-	window_t *win;
-        volatile bool done;
-        thread_handler_t* thread_handler;
-        struct Client* next;
+  int id;
+  pthread_t thread;
+  window_t *win;
+  volatile bool done;
+  thread_handler_t* thread_handler;
+  struct Client* next;
 };
 
 struct ThreadHandler {
@@ -56,23 +56,23 @@ thread_handler_t g_thread_handler;
  */
 client_t *client_create(int ID) 
 {
-    client_t *new_Client = (client_t *) malloc(sizeof(client_t));
-    char title[16];
-    new_Client->done = false;
-    new_Client->next = NULL;
-    new_Client->thread_handler = &g_thread_handler;
-    new_Client->id = ID;
+  client_t *new_Client = (client_t *) malloc(sizeof(client_t));
+  char title[16];
+  new_Client->done = false;
+  new_Client->next = NULL;
+  new_Client->thread_handler = &g_thread_handler;
+  new_Client->id = ID;
 
-    if (!new_Client) return NULL;
+  if (!new_Client) return NULL;
 
-    sprintf(title, "Client %d", ID);
+  sprintf(title, "Client %d", ID);
 
-    /* Creates a window and set up a communication channel with it */
-    if ((new_Client->win = window_create(title))) return new_Client;
-    else {
-	free(new_Client);
-	return NULL;
-    }
+  /* Creates a window and set up a communication channel with it */
+  if ((new_Client->win = window_create(title))) return new_Client;
+  else {
+    free(new_Client);
+    return NULL;
+  }
 }
 
 /*
@@ -83,16 +83,16 @@ client_t *client_create(int ID)
  */
 client_t *client_create_no_window(char *in, char *out) 
 {
-    char *outf = (out) ? out : "/dev/stdout";
-    client_t *new_Client = (client_t *) malloc(sizeof(client_t));
-    if (!new_Client) return NULL;
+  char *outf = (out) ? out : "/dev/stdout";
+  client_t *new_Client = (client_t *) malloc(sizeof(client_t));
+  if (!new_Client) return NULL;
 
-    /* Creates a window and set up a communication channel with it */
-    if( (new_Client->win = nowindow_create(in, outf))) return new_Client;
-    else {
-	free(new_Client);
-	return NULL;
-    }
+  /* Creates a window and set up a communication channel with it */
+  if( (new_Client->win = nowindow_create(in, outf))) return new_Client;
+  else {
+    free(new_Client);
+    return NULL;
+  }
 }
 
 /*
@@ -103,12 +103,12 @@ client_t *client_create_no_window(char *in, char *out)
  */
 void client_destroy(client_t *client) 
 {
-	/* Remove the window */
-	window_destroy(client->win);
-	//free(client); Let the handler take care of this
-        client->done = true;
-        pthread_cond_signal(&client->thread_handler->thread_done_cond);
-        pthread_exit(NULL);
+  /* Remove the window */
+  window_destroy(client->win);
+  //free(client); Let the handler take care of this
+  client->done = true;
+  pthread_cond_signal(&client->thread_handler->thread_done_cond);
+  pthread_exit(NULL);
 }
 
 void client_cleanup(client_t *client) 
@@ -119,30 +119,30 @@ void client_cleanup(client_t *client)
 /* Code executed by the client */
 void *client_run(void *arg)
 {
-	client_t *client = (client_t *) arg;
+  client_t *client = (client_t *) arg;
 
-	/* main loop of the client: fetch commands from window, interpret
-	 * and handle them, return results to window. */
-	char *command = 0;
-	size_t clen = 0;
-	/* response must be empty for the first call to serve */
-	char response[256] = { 0 };
+  /* main loop of the client: fetch commands from window, interpret
+   * and handle them, return results to window. */
+  char *command = 0;
+  size_t clen = 0;
+  /* response must be empty for the first call to serve */
+  char response[256] = { 0 };
 
-	/* Serve until the other side closes the pipe */
-	while (serve(client->win, response, &command, &clen) != -1) {
-	    handle_command(command, response, sizeof(response));
-	}
-	return 0;
+  /* Serve until the other side closes the pipe */
+  while (serve(client->win, response, &command, &clen) != -1) {
+    handle_command(command, response, sizeof(response));
+  }
+  return 0;
 }
 
 int handle_command(char *command, char *response, int len) 
 {
-    if (command[0] == EOF) {
-	strncpy(response, "all done", len - 1);
-	return 0;
-    }
-    interpret_command(command, response, len);
-    return 1;
+  if (command[0] == EOF) {
+    strncpy(response, "all done", len - 1);
+    return 0;
+  }
+  interpret_command(command, response, len);
+  return 1;
 }
 
 void *client_main(void *arg) 
@@ -244,27 +244,27 @@ void init_thread_handler(thread_handler_t* t)
 
 int main(int argc, char *argv[]) 
 {
-    char command[256] = { '\0' };
-    char response[256] = { '\0' };
-    //Initialize thread_handler
-    init_thread_handler(&g_thread_handler);
+  char command[256] = { '\0' };
+  char response[256] = { '\0' };
+  //Initialize thread_handler
+  init_thread_handler(&g_thread_handler);
 
-    if (argc != 1) {
-	fprintf(stderr, "Usage: server\n");
-	exit(1);
-    }
+  if (argc != 1) {
+    fprintf(stderr, "Usage: server\n");
+    exit(1);
+  }
 
-    // Launch the thread handler
-    pthread_create(&g_thread_handler.thread, NULL, thread_handler_main, NULL);
+  // Launch the thread handler
+  pthread_create(&g_thread_handler.thread, NULL, thread_handler_main, NULL);
 
 
-    for (;;) {
-      fprintf(stdout, ">>> ");
-      fgets(command, sizeof(command), stdin);
-      handle_main_command(command, response, sizeof(response));
-      fprintf(stdout, "%s\n", response);
-    }
+  for (;;) {
+    fprintf(stdout, ">>> ");
+    fgets(command, sizeof(command), stdin);
+    handle_main_command(command, response, sizeof(response));
+    fprintf(stdout, "%s\n", response);
+  }
 
-    window_cleanup();
-    return 0;
+  window_cleanup();
+  return 0;
 }
