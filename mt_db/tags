@@ -36,6 +36,7 @@ done	server.c	/^  volatile bool done;$/;"	m	struct:Client	file:
 echo	window.h	/^	int echo;$/;"	m	struct:window
 find_white	words.c	/^static inline char *find_white(char *s) {$/;"	f	file:
 free_words	words.c	/^void free_words(char **words) {$/;"	f
+g_coarse_mutex	db_coarse.c	/^pthread_mutex_t g_coarse_mutex;$/;"	v
 g_thread_handler	server.c	/^thread_handler_t g_thread_handler;$/;"	v
 gotint	interface.c	/^int gotint = 0;$/;"	v
 handle_command	server.c	/^int handle_command(char *command, char *response, int len) $/;"	f

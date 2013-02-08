@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <pthread.h>
+
 
 /* Forward declaration */
 node_t *search(char *, node_t *, node_t **);
@@ -12,79 +14,96 @@ node_t head = { "", "", 0, 0 };
 /*
  * Allocate a new node with the given key, value and children.
  */
+
+pthread_mutex_t g_coarse_mutex;
+
 node_t *node_create(char *arg_name, char *arg_value, node_t * arg_left,
-	node_t * arg_right) {
-    node_t *new_node;
+    node_t * arg_right) {
+  node_t *new_node;
 
-    new_node = (node_t *) malloc(sizeof(node_t));
-    if (!new_node) return NULL;
+  new_node = (node_t *) malloc(sizeof(node_t));
+  if (!new_node) return NULL;
 
-    if (!(new_node->name = (char *)malloc(strlen(arg_name) + 1))) {
-	free(new_node);
-	return NULL;
-    }
+  if (!(new_node->name = (char *)malloc(strlen(arg_name) + 1))) {
+    free(new_node);
+    return NULL;
+  }
 
-    if (!(new_node->value = (char *)malloc(strlen(arg_value) + 1))) {
-	free(new_node->name);
-	free(new_node);
-	return NULL;
-    }
+  if (!(new_node->value = (char *)malloc(strlen(arg_value) + 1))) {
+    free(new_node->name);
+    free(new_node);
+    return NULL;
+  }
 
-    strcpy(new_node->name, arg_name);
-    strcpy(new_node->value, arg_value);
-    new_node->lchild = arg_left;
-    new_node->rchild = arg_right;
-    
-    return new_node;
+  strcpy(new_node->name, arg_name);
+  strcpy(new_node->value, arg_value);
+  new_node->lchild = arg_left;
+  new_node->rchild = arg_right;
+
+  return new_node;
 }
 
 /* Free the data structures in node and the node itself. */
 void node_destroy(node_t * node) {
-    /* Clearing name and value after they are freed is defensive programming in
-     * case the node_destroy is called again. */
-    if (node->name) {free(node->name); node->name = NULL; }
-    if (node->value) { free(node->value); node->value = NULL; }
-    free(node);
+  /* Clearing name and value after they are freed is defensive programming in
+   * case the node_destroy is called again. */
+  if (node->name) {free(node->name); node->name = NULL; }
+  if (node->value) { free(node->value); node->value = NULL; }
+  free(node);
 }
 
 /* Find the node with key name and return a result or error string in result.
  * Result must have space for len characters. */
 void query(char *name, char *result, int len) {
-    node_t *target;
+  node_t *target;
 
-    target = search(name, &head, NULL);
+  // Lock the mutex
+  pthread_mutex_lock(&g_coarse_mutex);
 
-    if (!target) {
-	strncpy(result, "not found", len - 1);
-	return;
-    } else {
-	strncpy(result, target->value, len - 1);
-	return;
-    }
+  target = search(name, &head, NULL);
+
+  if (!target) {
+    strncpy(result, "not found", len - 1);
+  } else {
+    strncpy(result, target->value, len - 1);
+  }
+
+  // Unlock the mutex
+  pthread_mutex_unlock(&g_coarse_mutex);
 }
 
 /* Insert a node with name and value into the proper place in the DB rooted at
  * head. */
 int add(char *name, char *value) {
-	node_t *parent;	    /* The new node will be the child of this node */
-	node_t *target;	    /* The existing node with key name if any */
-	node_t *newnode;    /* The new node to add */
+  node_t *parent;	    /* The new node will be the child of this node */
+  node_t *target;	    /* The existing node with key name if any */
+  node_t *newnode;    /* The new node to add */
 
-	if ((target = search(name, &head, &parent))) {
-	    /* There is already a node with this key in the tree */
-	    return 0;
-	}
+  // Lock the mutex for adding
+  pthread_mutex_lock(&g_coarse_mutex);
 
-	/* No idea how this could happen, but... */
-	if (!parent) return 0;
+  if ((target = search(name, &head, &parent))) {
+    /* There is already a node with this key in the tree */
+    pthread_mutex_unlock(&g_coarse_mutex);
+    return 0;
+  }
 
-	/* make the new node and attach it to parent */
-	newnode = node_create(name, value, 0, 0);
+  /* No idea how this could happen, but... */
+  if (!parent) { 
+    pthread_mutex_unlock(&g_coarse_mutex);
+    return 0;
+  }
 
-	if (strcmp(name, parent->name) < 0) parent->lchild = newnode;
-	else parent->rchild = newnode;
+  /* make the new node and attach it to parent */
+  newnode = node_create(name, value, 0, 0);
 
-	return 1;
+  if (strcmp(name, parent->name) < 0) parent->lchild = newnode;
+  else parent->rchild = newnode;
+
+  // Unlock the mutex
+  pthread_mutex_unlock(&g_coarse_mutex);
+
+  return 1;
 }
 
 /*
@@ -95,75 +114,81 @@ int add(char *name, char *value) {
  * example).
  */
 static inline void swap_pointers(char **a, char **b) {
-    char *tmp = *b;
-    *b = *a;
-    *a = tmp;
+  char *tmp = *b;
+  *b = *a;
+  *a = tmp;
 }
 
 /* Remove the node with key name from the tree if it is there.  See inline
  * comments for algorithmic details.  Return true if something was deleted. */
 int xremove(char *name) {
-	node_t *parent;	    /* Parent of the node to delete */
-	node_t *dnode;	    /* Node to delete */
-	node_t *next;	    /* used to find leftmost child of right subtree */
-	node_t **pnext;	    /* A pointer in the tree that points to next so we
-			       can change that nodes children (see below). */
+  node_t *parent;	    /* Parent of the node to delete */
+  node_t *dnode;	    /* Node to delete */
+  node_t *next;	    /* used to find leftmost child of right subtree */
+  node_t **pnext;	    /* A pointer in the tree that points to next so we
+                               can change that nodes children (see below). */
 
-	/* first, find the node to be removed */
-	if (!(dnode = search(name, &head, &parent))) {
-	    /* it's not there */
-	    return 0;
-	}
+  // Lock the mutex!
+  pthread_mutex_lock(&g_coarse_mutex);
 
-	/* we found it.  Now check out the easy cases.  If the node has no
-	 * right child, then we can merely replace its parent's pointer to
-	 * it with the node's left child. */
-	if (dnode->rchild == 0) {
-	    if (strcmp(dnode->name, parent->name) < 0)
-		parent->lchild = dnode->lchild;
-	    else
-		parent->rchild = dnode->lchild;
+  /* first, find the node to be removed */
+  if (!(dnode = search(name, &head, &parent))) {
+    /* it's not there */
+    pthread_mutex_unlock(&g_coarse_mutex);
+    return 0;
+  }
 
-	    /* done with dnode */
-	    node_destroy(dnode);
-	} else if (dnode->lchild == 0) {
-	    /* ditto if the node had no left child */
-	    if (strcmp(dnode->name, parent->name) < 0)
-		parent->lchild = dnode->rchild;
-	    else
-		parent->rchild = dnode->rchild;
+  /* we found it.  Now check out the easy cases.  If the node has no
+   * right child, then we can merely replace its parent's pointer to
+   * it with the node's left child. */
+  if (dnode->rchild == 0) {
+    if (strcmp(dnode->name, parent->name) < 0)
+      parent->lchild = dnode->lchild;
+    else
+      parent->rchild = dnode->lchild;
 
-	    /* done with dnode */
-	    node_destroy(dnode);
-	} else {
-	    /* So much for the easy cases ...
-	     * We know that all nodes in a node's right subtree have
-	     * lexicographically greater names than the node does, and all
-	     * nodes in a node's left subtree have lexicographically smaller
-	     * names than the node does. So, we find the lexicographically
-	     * smallest node in the right subtree and replace the node to be
-	     * deleted with that node. This new node thus is lexicographically
-	     * smaller than all nodes in its right subtree, and greater than
-	     * all nodes in its left subtree. Thus the modified tree is well
-	     * formed. */
+    /* done with dnode */
+    node_destroy(dnode);
+  } else if (dnode->lchild == 0) {
+    /* ditto if the node had no left child */
+    if (strcmp(dnode->name, parent->name) < 0)
+      parent->lchild = dnode->rchild;
+    else
+      parent->rchild = dnode->rchild;
 
-	    /* pnext is the address of the pointer which points to next (either
-	     * parent's lchild or rchild) */
-	    pnext = &dnode->rchild;
-	    next = *pnext;
-	    while (next->lchild != 0) {
-		    /* work our way down the lchild chain, finding the smallest
-		     * node in the subtree. */
-		    pnext = &next->lchild;
-		    next = *pnext;
-	    }
-	    swap_pointers(&dnode->name, &next->name);
-	    swap_pointers(&dnode->value, &next->value);
-	    *pnext = next->rchild;
+    /* done with dnode */
+    node_destroy(dnode);
+  } else {
+    /* So much for the easy cases ...
+     * We know that all nodes in a node's right subtree have
+     * lexicographically greater names than the node does, and all
+     * nodes in a node's left subtree have lexicographically smaller
+     * names than the node does. So, we find the lexicographically
+     * smallest node in the right subtree and replace the node to be
+     * deleted with that node. This new node thus is lexicographically
+     * smaller than all nodes in its right subtree, and greater than
+     * all nodes in its left subtree. Thus the modified tree is well
+     * formed. */
 
-	    node_destroy(next);
+    /* pnext is the address of the pointer which points to next (either
+     * parent's lchild or rchild) */
+    pnext = &dnode->rchild;
+    next = *pnext;
+    while (next->lchild != 0) {
+      /* work our way down the lchild chain, finding the smallest
+       * node in the subtree. */
+      pnext = &next->lchild;
+      next = *pnext;
     }
-    return 1;
+    swap_pointers(&dnode->name, &next->name);
+    swap_pointers(&dnode->value, &next->value);
+    *pnext = next->rchild;
+
+    node_destroy(next);
+  }
+
+  pthread_mutex_unlock(&g_coarse_mutex);
+  return 1;
 }
 
 /* Search the tree, starting at parent, for a node containing name (the "target
@@ -177,31 +202,31 @@ int xremove(char *name) {
  * parent is not null and it does not contain name */
 node_t *search(char *name, node_t * parent, node_t ** parentpp) {
 
-    node_t *next;
-    node_t *result;
+  node_t *next;
+  node_t *result;
 
-    if (strcmp(name, parent->name) < 0) next = parent->lchild;
-    else next = parent->rchild;
+  if (strcmp(name, parent->name) < 0) next = parent->lchild;
+  else next = parent->rchild;
 
-    if (next == NULL) {
-	result = NULL;
+  if (next == NULL) {
+    result = NULL;
+  } else {
+    if (strcmp(name, next->name) == 0) {
+      /* Note that this falls through to the if (parentpp .. ) statement
+       * below. */
+      result = next;
     } else {
-	if (strcmp(name, next->name) == 0) {
-	    /* Note that this falls through to the if (parentpp .. ) statement
-	     * below. */
-	    result = next;
-	} else {
-	    /* "We have to go deeper!" This recurses and returns from here
-	     * after the recursion has returned result and set parentpp */
-	    result = search(name, next, parentpp);
-	    return result;
-	}
+      /* "We have to go deeper!" This recurses and returns from here
+       * after the recursion has returned result and set parentpp */
+      result = search(name, next, parentpp);
+      return result;
     }
+  }
 
-    /* record a parent if we are looking for one */
-    if (parentpp != 0) *parentpp = parent;
+  /* record a parent if we are looking for one */
+  if (parentpp != 0) *parentpp = parent;
 
-    return (result);
+  return (result);
 }
 
 /*
@@ -211,87 +236,93 @@ node_t *search(char *name, node_t * parent, node_t ** parentpp) {
  */
 void interpret_command(char *command, char *response, int len)
 {
-    char value[256];
-    char ibuf[256];
-    char name[256];
+  char value[256];
+  char ibuf[256];
+  char name[256];
 
-    if (strlen(command) <= 1) {
-	strncpy(response, "ill-formed command", len - 1);
-	return;
-    }
+  static int initialized = 0;
 
-    switch (command[0]) {
+  if (!initialized) {
+    pthread_mutex_init(&g_coarse_mutex, NULL);
+    initialized = 1;
+  }
+
+  if (strlen(command) <= 1) {
+    strncpy(response, "ill-formed command", len - 1);
+    return;
+  }
+
+  switch (command[0]) {
     case 'q':
-	/* Query */
-	sscanf(&command[1], "%255s", name);
-	if (strlen(name) == 0) {
-	    strncpy(response, "ill-formed command", len - 1);
-	    return;
-	}
+      /* Query */
+      sscanf(&command[1], "%255s", name);
+      if (strlen(name) == 0) {
+        strncpy(response, "ill-formed command", len - 1);
+        return;
+      }
+      query(name, response, len);
+      if (strlen(response) == 0) {
+        strncpy(response, "not found", len - 1);
+      }
 
-	query(name, response, len);
-	if (strlen(response) == 0) {
-	    strncpy(response, "not found", len - 1);
-	}
-
-	return;
+      return;
 
     case 'a':
-	/* Add to the database */
-	sscanf(&command[1], "%255s %255s", name, value);
-	if ((strlen(name) == 0) || (strlen(value) == 0)) {
-	    strncpy(response, "ill-formed command", len - 1);
-	    return;
-	}
+      /* Add to the database */
+      sscanf(&command[1], "%255s %255s", name, value);
+      if ((strlen(name) == 0) || (strlen(value) == 0)) {
+        strncpy(response, "ill-formed command", len - 1);
+        return;
+      }
 
-	if (add(name, value)) {
-	    strncpy(response, "added", len - 1);
-	} else {
-	    strncpy(response, "already in database", len - 1);
-	}
+      if (add(name, value)) {
+        strncpy(response, "added", len - 1);
+      } else {
+        strncpy(response, "already in database", len - 1);
+      }
 
-	return;
+      return;
 
     case 'd':
-	/* Delete from the database */
-	sscanf(&command[1], "%255s", name);
-	if (strlen(name) == 0) {
-	    strncpy(response, "ill-formed command", len - 1);
-	    return;
-	}
+      /* Delete from the database */
+      sscanf(&command[1], "%255s", name);
+      if (strlen(name) == 0) {
+        strncpy(response, "ill-formed command", len - 1);
+        return;
+      }
 
-	if (xremove(name)) {
-	    strncpy(response, "removed", len - 1);
-	} else {
-	    strncpy(response, "not in database", len - 1);
-	}
+      if (xremove(name)) {
+        strncpy(response, "removed", len - 1);
+      } else {
+        strncpy(response, "not in database", len - 1);
+      }
 
-	    return;
+      return;
 
     case 'f':
-	/* process the commands in a file (silently) */
-	sscanf(&command[1], "%255s", name);
-	if (name[0] == '\0') {
-	    strncpy(response, "ill-formed command", len - 1);
-	    return;
-	}
+      /* process the commands in a file (silently) */
+      sscanf(&command[1], "%255s", name);
+      if (name[0] == '\0') {
+        strncpy(response, "ill-formed command", len - 1);
+        return;
+      }
 
-	{
-	    FILE *finput = fopen(name, "r");
-	    if (!finput) {
-		strncpy(response, "bad file name", len - 1);
-		return;
-	    }
-	    while (fgets(ibuf, sizeof(ibuf), finput) != 0) {
-		interpret_command(ibuf, response, len);
-	    }
-	    fclose(finput);
-	}
-	strncpy(response, "file processed", len - 1);
-	return;
+      {
+        FILE *finput = fopen(name, "r");
+        if (!finput) {
+          strncpy(response, "bad file name", len - 1);
+          return;
+        }
+        while (fgets(ibuf, sizeof(ibuf), finput) != 0) {
+          interpret_command(ibuf, response, len);
+        }
+        fclose(finput);
+      }
+      strncpy(response, "file processed", len - 1);
+      return;
 
     default:
-	strncpy(response, "ill-formed command", len - 1);
-	return;
-    }
+      strncpy(response, "ill-formed command", len - 1);
+      return;
+  }
 }
