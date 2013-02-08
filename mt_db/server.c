@@ -61,13 +61,13 @@ thread_handler_t g_thread_handler;
 client_t *client_create(int ID) 
 {
   client_t *new_Client = (client_t *) malloc(sizeof(client_t));
+  if (!new_Client) return NULL;
+  
   char title[16];
   new_Client->done = false;
   new_Client->next = NULL;
   new_Client->thread_handler = &g_thread_handler;
   new_Client->id = ID;
-
-  if (!new_Client) return NULL;
 
   sprintf(title, "Client %d", ID);
 
@@ -198,6 +198,11 @@ void create_client()
 
   c = client_create(started++);
 
+  if (c == NULL) {
+    fprintf(stdout, "uhh malloc returned NULL (so I'm going to panic).\n");
+    exit(1);
+  }
+
   add_client_to_thread_handler(c);
   launch_client_thread(c);
 }
@@ -206,6 +211,11 @@ void create_non_interactive_client(char* fin, char* fout)
 {
   client_t *c = NULL;
   c = client_create_no_window(fin, fout);
+
+  if (c == NULL) {
+    fprintf(stdout, "uhh malloc returned NULL (so I'm going to panic).\n");
+    exit(1);
+  }
 
   add_client_to_thread_handler(c);
   launch_client_thread(c);
