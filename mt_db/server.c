@@ -132,6 +132,8 @@ void *client_run(void *arg)
   while (serve(client->win, response, &command, &clen) != -1) {
     handle_command(command, response, sizeof(response));
   }
+
+  client_destroy(client);
   return 0;
 }
 
@@ -143,17 +145,6 @@ int handle_command(char *command, char *response, int len)
   }
   interpret_command(command, response, len);
   return 1;
-}
-
-void *client_main(void *arg) 
-{
-  client_run(arg);
-  client_destroy(arg);
-
-  // Get the compiler to shut up
-  // about no return value.
-  // Either way we should never reach here.
-  return NULL;
 }
 
 void create_client() 
@@ -173,7 +164,7 @@ void create_client()
   pthread_mutex_unlock(&g_thread_handler.clients_mutex);
 
   //c->thread = malloc(sizeof(c->thread));
-  pthread_create(&c->thread, NULL, client_main, c); 
+  pthread_create(&c->thread, NULL, client_run, c); 
 }
 
 void handle_main_command(char *command, char *response, int len) 
@@ -185,6 +176,7 @@ void handle_main_command(char *command, char *response, int len)
       break;
     case 'E':
       strncpy(response, "unimplemented", len);
+
       break;
     case 's':
       strncpy(response, "unimplemented", len);

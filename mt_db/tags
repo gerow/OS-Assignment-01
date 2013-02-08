@@ -24,14 +24,13 @@ client_cleanup	server.c	/^void client_cleanup(client_t *client) $/;"	f
 client_create	server.c	/^client_t *client_create(int ID) $/;"	f
 client_create_no_window	server.c	/^client_t *client_create_no_window(char *in, char *out) $/;"	f
 client_destroy	server.c	/^void client_destroy(client_t *client) $/;"	f
-client_main	server.c	/^void *client_main(void *arg) $/;"	f
 client_run	server.c	/^void *client_run(void *arg)$/;"	f
 client_t	server.c	/^typedef struct Client client_t;$/;"	t	typeref:struct:Client	file:
 clients	server.c	/^  client_t* clients;$/;"	m	struct:ThreadHandler	file:
 clients_mutex	server.c	/^  pthread_mutex_t clients_mutex;$/;"	m	struct:ThreadHandler	file:
 create_client	server.c	/^void create_client() $/;"	f
 create_fifos	window.c	/^static int create_fifos(window_t *new_window) {$/;"	f	file:
-done	server.c	/^        volatile bool done;$/;"	m	struct:Client	file:
+done	server.c	/^  volatile bool done;$/;"	m	struct:Client	file:
 echo	window.h	/^	int echo;$/;"	m	struct:window
 find_white	words.c	/^static inline char *find_white(char *s) {$/;"	f	file:
 free_words	words.c	/^void free_words(char **words) {$/;"	f
@@ -42,7 +41,7 @@ handle_main_command	server.c	/^void handle_main_command(char *command, char *res
 head	db_coarse.c	/^node_t head = { "", "", 0, 0 };$/;"	v
 head	db_fine.c	/^node_t head = { "", "", 0, 0 };$/;"	v
 head	db_rw.c	/^node_t head = { "", "", 0, 0 };$/;"	v
-id	server.c	/^        int id;$/;"	m	struct:Client	file:
+id	server.c	/^  int id;$/;"	m	struct:Client	file:
 ififo	window.h	/^	char *ififo;$/;"	m	struct:window
 in	window.h	/^	FILE *in;$/;"	m	struct:window
 init_thread_handler	server.c	/^void init_thread_handler(thread_handler_t* t)$/;"	f
@@ -55,7 +54,7 @@ main	server.c	/^int main(int argc, char *argv[]) $/;"	f
 main	words.c	/^int main(int argc, char **argv) {$/;"	f
 make_tempdir	window.c	/^static int make_tempdir() {$/;"	f	file:
 name	db.h	/^	char *name;$/;"	m	struct:Node
-next	server.c	/^        struct Client* next;$/;"	m	struct:Client	typeref:struct:Client::Client	file:
+next	server.c	/^  struct Client* next;$/;"	m	struct:Client	typeref:struct:Client::Client	file:
 node_create	db_coarse.c	/^node_t *node_create(char *arg_name, char *arg_value, node_t * arg_left,$/;"	f
 node_create	db_fine.c	/^node_t *node_create(char *arg_name, char *arg_value, node_t * arg_left,$/;"	f
 node_create	db_rw.c	/^node_t *node_create(char *arg_name, char *arg_value, node_t * arg_left,$/;"	f
@@ -85,15 +84,15 @@ swap_pointers	db_fine.c	/^static inline void swap_pointers(char **a, char **b) {
 swap_pointers	db_rw.c	/^static inline void swap_pointers(char **a, char **b) {$/;"	f	file:
 template	window.c	/^static char *template = "\/tmp\/serverXXXXXX";$/;"	v	file:
 terminate	interface.c	/^void terminate() {$/;"	f
-thread	server.c	/^	pthread_t thread;$/;"	m	struct:Client	file:
+thread	server.c	/^  pthread_t thread;$/;"	m	struct:Client	file:
 thread	server.c	/^  pthread_t thread;$/;"	m	struct:ThreadHandler	file:
 thread_done_cond	server.c	/^  pthread_cond_t thread_done_cond;$/;"	m	struct:ThreadHandler	file:
-thread_handler	server.c	/^        thread_handler_t* thread_handler;$/;"	m	struct:Client	file:
+thread_handler	server.c	/^  thread_handler_t* thread_handler;$/;"	m	struct:Client	file:
 thread_handler_main	server.c	/^void *thread_handler_main(void *arg)$/;"	f
 thread_handler_t	server.c	/^typedef struct ThreadHandler thread_handler_t;$/;"	t	typeref:struct:ThreadHandler	file:
 tmpdir	window.c	/^char *tmpdir= NULL;$/;"	v
 value	db.h	/^	char *value;$/;"	m	struct:Node
-win	server.c	/^	window_t *win;$/;"	m	struct:Client	file:
+win	server.c	/^  window_t *win;$/;"	m	struct:Client	file:
 window	window.h	/^typedef struct window {$/;"	s
 window_cleanup	window.c	/^void window_cleanup() {$/;"	f
 window_count	window.c	/^int window_count = 0;$/;"	v
