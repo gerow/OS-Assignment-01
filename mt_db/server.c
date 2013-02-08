@@ -131,8 +131,11 @@ static inline void wait_on_pause()
   // needing to lock it) but... yeah.
   if (g_thread_handler.pause) {
     pthread_mutex_lock(&g_thread_handler.pause_mutex);
+    // Check the value again to make sure it didn't get swapped
+    // out from under us.
     if (g_thread_handler.pause) {
-      pthread_cond_wait(&g_thread_handler.pause_cond, &g_thread_handler.pause_mutex);
+      pthread_cond_wait(&g_thread_handler.pause_cond,
+          &g_thread_handler.pause_mutex);
     }
     pthread_mutex_unlock(&g_thread_handler.pause_mutex);
   }
@@ -217,8 +220,10 @@ void unpause_clients()
 {
   if (!g_thread_handler.pause) { return; }
 
-  // No need to lock here
+  // You DO need to lock here
+  pthread_mutex_lock(&g_thread_handler.pause_mutex);
   g_thread_handler.pause = false;
+  pthread_mutex_unlock(&g_thread_handler.pause_mutex);
   pthread_cond_broadcast(&g_thread_handler.pause_cond);
 }
 
