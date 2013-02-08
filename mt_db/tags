@@ -19,6 +19,7 @@ _WITH_GETLINE	window.c	1;"	d	file:
 add	db_coarse.c	/^int add(char *name, char *value) {$/;"	f
 add	db_fine.c	/^int add(char *name, char *value) {$/;"	f
 add	db_rw.c	/^int add(char *name, char *value) {$/;"	f
+add_client_to_thread_handler	server.c	/^void add_client_to_thread_handler(client_t *c)$/;"	f
 add_word	words.c	/^static char **add_word(char **words, int *cap, int n, char *word) {$/;"	f	file:
 client_cleanup	server.c	/^void client_cleanup(client_t *client) $/;"	f
 client_create	server.c	/^client_t *client_create(int ID) $/;"	f
@@ -30,6 +31,7 @@ clients	server.c	/^  client_t* clients;$/;"	m	struct:ThreadHandler	file:
 clients_mutex	server.c	/^  pthread_mutex_t clients_mutex;$/;"	m	struct:ThreadHandler	file:
 create_client	server.c	/^void create_client() $/;"	f
 create_fifos	window.c	/^static int create_fifos(window_t *new_window) {$/;"	f	file:
+create_non_interactive_client	server.c	/^void create_non_interactive_client(char* fin, char* fout)$/;"	f
 done	server.c	/^  volatile bool done;$/;"	m	struct:Client	file:
 echo	window.h	/^	int echo;$/;"	m	struct:window
 find_white	words.c	/^static inline char *find_white(char *s) {$/;"	f	file:
@@ -37,7 +39,7 @@ free_words	words.c	/^void free_words(char **words) {$/;"	f
 g_thread_handler	server.c	/^thread_handler_t g_thread_handler;$/;"	v
 gotint	interface.c	/^int gotint = 0;$/;"	v
 handle_command	server.c	/^int handle_command(char *command, char *response, int len) $/;"	f
-handle_main_command	server.c	/^void handle_main_command(char *command, char *response, int len) $/;"	f
+handle_main_command	server.c	/^void handle_main_command(char *command) $/;"	f
 head	db_coarse.c	/^node_t head = { "", "", 0, 0 };$/;"	v
 head	db_fine.c	/^node_t head = { "", "", 0, 0 };$/;"	v
 head	db_rw.c	/^node_t head = { "", "", 0, 0 };$/;"	v
@@ -48,6 +50,7 @@ init_thread_handler	server.c	/^void init_thread_handler(thread_handler_t* t)$/;"
 interpret_command	db_coarse.c	/^void interpret_command(char *command, char *response, int len)$/;"	f
 interpret_command	db_fine.c	/^void interpret_command(char *command, char *response, int len)$/;"	f
 interpret_command	db_rw.c	/^void interpret_command(char *command, char *response, int len)$/;"	f
+launch_client_thread	server.c	/^void launch_client_thread(client_t *c)$/;"	f
 lchild	db.h	/^	struct Node *lchild;$/;"	m	struct:Node	typeref:struct:Node::Node
 main	interface.c	/^int main(int argc, const char *argv[]) {$/;"	f
 main	server.c	/^int main(int argc, char *argv[]) $/;"	f

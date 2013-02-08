@@ -87,6 +87,11 @@ client_t *client_create_no_window(char *in, char *out)
   client_t *new_Client = (client_t *) malloc(sizeof(client_t));
   if (!new_Client) return NULL;
 
+  new_Client->done = false;
+  new_Client->next = NULL;
+  new_Client->thread_handler = &g_thread_handler;
+  new_Client->id = -1;
+
   /* Creates a window and set up a communication channel with it */
   if( (new_Client->win = nowindow_create(in, outf))) return new_Client;
   else {
@@ -147,13 +152,8 @@ int handle_command(char *command, char *response, int len)
   return 1;
 }
 
-void create_client() 
+void add_client_to_thread_handler(client_t *c)
 {
-  static int started = 0;
-  client_t *c = NULL;
-
-  c = client_create(started++);
-
   // Add this thread's info to the clients linked list
   // First lock the list
   pthread_mutex_lock(&g_thread_handler.clients_mutex);
@@ -162,33 +162,66 @@ void create_client()
   g_thread_handler.clients = c;
   // Unlock the clients list
   pthread_mutex_unlock(&g_thread_handler.clients_mutex);
+}
 
-  //c->thread = malloc(sizeof(c->thread));
+void launch_client_thread(client_t *c)
+{
   pthread_create(&c->thread, NULL, client_run, c); 
 }
 
-void handle_main_command(char *command, char *response, int len) 
+void create_client() 
+{
+  static int started = 0;
+  client_t *c = NULL;
+
+  c = client_create(started++);
+
+  add_client_to_thread_handler(c);
+  launch_client_thread(c);
+}
+
+void create_non_interactive_client(char* fin, char* fout)
+{
+  client_t *c = NULL;
+  c = client_create_no_window(fin, fout);
+
+  add_client_to_thread_handler(c);
+  launch_client_thread(c);
+}
+
+void handle_main_command(char *command) 
 {
   switch (command[0]) {
     case 'e':
-      strncpy(response, "creating new interactive client", len);
+      fprintf(stdout, "creating new interactive client\n");
       create_client();
       break;
     case 'E':
-      strncpy(response, "unimplemented", len);
-
+      {
+        char **words = NULL;
+        words = split_words(command);
+        int num_words;
+        for (num_words = 0; words[num_words] != NULL; ++num_words);
+        if (num_words != 3) {
+          fprintf(stdout, "ill-formed command");
+          return;
+        }
+        fprintf(stdout, "creating new non interactive client from %s to %s\n", words[1], words[2]); 
+        create_non_interactive_client(words[1], words[2]);
+        free_words(words);
+      }
       break;
     case 's':
-      strncpy(response, "unimplemented", len);
+      fprintf(stdout, "unimplemented\n");
       break;
     case 'g':
-      strncpy(response, "unimplemented", len);
+      fprintf(stdout, "unimplemented\n");
       break;
     case 'w':
-      strncpy(response, "unimplemented", len);
+      fprintf(stdout, "unimplemented\n");
       break;
     default:
-      strncpy(response, "ill-formed command", len);
+      fprintf(stdout, "ill-formed command\n");
       break;
   }
 }
@@ -237,7 +270,6 @@ void init_thread_handler(thread_handler_t* t)
 int main(int argc, char *argv[]) 
 {
   char command[256] = { '\0' };
-  char response[256] = { '\0' };
   //Initialize thread_handler
   init_thread_handler(&g_thread_handler);
 
@@ -253,8 +285,7 @@ int main(int argc, char *argv[])
   for (;;) {
     fprintf(stdout, ">>> ");
     fgets(command, sizeof(command), stdin);
-    handle_main_command(command, response, sizeof(response));
-    fprintf(stdout, "%s\n", response);
+    handle_main_command(command);
   }
 
   window_cleanup();
