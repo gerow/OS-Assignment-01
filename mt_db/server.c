@@ -44,6 +44,9 @@ void *client_run(void *);
 /* Interface to the db routines.  Pass a command, get a result */
 int handle_command(char *, char *, int len);
 
+//Global thread handler (just to make things simpler)
+thread_handler_t g_thread_handler;
+
 /*
  * Create an interactive client - one with its own window.  This routine
  * creates the window (which starts the xterm and a process under it.  The
@@ -51,13 +54,13 @@ int handle_command(char *, char *, int len);
  * returned and no process started.  The client data structure returned must be
  * destroyed using client_destroy()
  */
-client_t *client_create(int ID, thread_handler_t* thread_handler) 
+client_t *client_create(int ID) 
 {
     client_t *new_Client = (client_t *) malloc(sizeof(client_t));
     char title[16];
     new_Client->done = false;
     new_Client->next = NULL;
-    new_Client->thread_handler = thread_handler;
+    new_Client->thread_handler = &g_thread_handler;
     new_Client->id = ID;
 
     if (!new_Client) return NULL;
@@ -153,32 +156,32 @@ void *client_main(void *arg)
   return NULL;
 }
 
-void create_client(thread_handler_t* thread_handler) 
+void create_client() 
 {
   static int started = 0;
   client_t *c = NULL;
 
-  c = client_create(started++, thread_handler);
+  c = client_create(started++);
 
   // Add this thread's info to the clients linked list
   // First lock the list
-  pthread_mutex_lock(&thread_handler->clients_mutex);
+  pthread_mutex_lock(&g_thread_handler.clients_mutex);
   // Throw it on the beginning of the list
-  c->next = thread_handler->clients;
-  thread_handler->clients = c;
+  c->next = g_thread_handler.clients;
+  g_thread_handler.clients = c;
   // Unlock the clients list
-  pthread_mutex_unlock(&thread_handler->clients_mutex);
+  pthread_mutex_unlock(&g_thread_handler.clients_mutex);
 
   //c->thread = malloc(sizeof(c->thread));
   pthread_create(&c->thread, NULL, client_main, c); 
 }
 
-void handle_main_command(char *command, char *response, int len, thread_handler_t* thread_handler) 
+void handle_main_command(char *command, char *response, int len) 
 {
   switch (command[0]) {
     case 'e':
       strncpy(response, "creating new interactive client", len);
-      create_client(thread_handler);
+      create_client();
       break;
     case 'E':
       strncpy(response, "unimplemented", len);
@@ -225,11 +228,10 @@ void reap_done_clients(client_t **client)
 
 void *thread_handler_main(void *arg)
 {
-  thread_handler_t *t = arg;
-  pthread_mutex_lock(&t->clients_mutex);
+  pthread_mutex_lock(&g_thread_handler.clients_mutex);
   for (;;) {
-    pthread_cond_wait(&t->thread_done_cond, &t->clients_mutex);
-    reap_done_clients(&t->clients);
+    pthread_cond_wait(&g_thread_handler.thread_done_cond, &g_thread_handler.clients_mutex);
+    reap_done_clients(&g_thread_handler.clients);
   }
 }
 
@@ -244,9 +246,8 @@ int main(int argc, char *argv[])
 {
     char command[256] = { '\0' };
     char response[256] = { '\0' };
-    thread_handler_t thread_handler;
     //Initialize thread_handler
-    init_thread_handler(&thread_handler);
+    init_thread_handler(&g_thread_handler);
 
     if (argc != 1) {
 	fprintf(stderr, "Usage: server\n");
@@ -254,13 +255,13 @@ int main(int argc, char *argv[])
     }
 
     // Launch the thread handler
-    pthread_create(&thread_handler.thread, NULL, thread_handler_main, &thread_handler);
+    pthread_create(&g_thread_handler.thread, NULL, thread_handler_main, NULL);
 
 
     for (;;) {
       fprintf(stdout, ">>> ");
       fgets(command, sizeof(command), stdin);
-      handle_main_command(command, response, sizeof(response), &thread_handler);
+      handle_main_command(command, response, sizeof(response));
       fprintf(stdout, "%s\n", response);
     }
 
