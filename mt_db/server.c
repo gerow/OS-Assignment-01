@@ -27,7 +27,7 @@ struct Client {
   int id;
   pthread_t thread;
   window_t *win;
-  volatile bool done;
+  bool done;
   thread_handler_t* thread_handler;
   struct Client* next;
 };
