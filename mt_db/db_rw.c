@@ -9,6 +9,38 @@
 node_t *search(char *, node_t *, node_t **);
 
 node_t head = { "", "", 0, 0 };
+
+pthread_mutex_t g_reader_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t g_writer_mutex = PTHREAD_MUTEX_INITIALIZER;
+int g_num_readers = 0;
+
+
+static inline void begin_reading() {
+  pthread_mutex_lock(&g_reader_mutex);
+  if (g_num_readers == 0) {
+    pthread_mutex_lock(&g_writer_mutex);
+  }
+  ++g_num_readers;
+  pthread_mutex_unlock(&g_reader_mutex);
+}
+
+static inline void begin_writing() {
+  pthread_mutex_lock(&g_writer_mutex);
+}
+
+static inline void end_reading() {
+  pthread_mutex_lock(&g_reader_mutex);
+  --g_num_readers;
+  if (g_num_readers == 0) {
+    pthread_mutex_unlock(&g_writer_mutex);
+  }
+  pthread_mutex_unlock(&g_reader_mutex);
+}
+
+static inline void end_writing() {
+  pthread_mutex_unlock(&g_writer_mutex);
+}
+
 /*
  * Allocate a new node with the given key, value and children.
  */
@@ -52,7 +84,9 @@ void node_destroy(node_t * node) {
 void query(char *name, char *result, int len) {
     node_t *target;
 
+    begin_reading();
     target = search(name, &head, NULL);
+    end_reading();
 
     if (!target) {
 	strncpy(result, "not found", len - 1);
@@ -81,8 +115,10 @@ int add(char *name, char *value) {
 	/* make the new node and attach it to parent */
 	newnode = node_create(name, value, 0, 0);
 
+        begin_writing();
 	if (strcmp(name, parent->name) < 0) parent->lchild = newnode;
 	else parent->rchild = newnode;
+        end_writing();
 
 	return 1;
 }
@@ -109,9 +145,12 @@ int xremove(char *name) {
 	node_t **pnext;	    /* A pointer in the tree that points to next so we
 			       can change that nodes children (see below). */
 
+        begin_writing();
+
 	/* first, find the node to be removed */
 	if (!(dnode = search(name, &head, &parent))) {
 	    /* it's not there */
+            end_writing();
 	    return 0;
 	}
 
@@ -163,6 +202,8 @@ int xremove(char *name) {
 
 	    node_destroy(next);
     }
+
+    end_writing();
     return 1;
 }
 

@@ -8,7 +8,6 @@ all:	$(ALL)
 
 server_coarse: server.o db_coarse.o window.o words.o
 	$(CC) $(CFLAGS) $(LDFLAGS) server.o db_coarse.o window.o words.o -o server_coarse
-	ctags -R .
 
 server_fine: server.o db_fine.o window.o words.o 
 	$(CC) $(CFLAGS) $(LDFLAGS) server.o db_fine.o window.o words.o -o server_fine
