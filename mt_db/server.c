@@ -17,6 +17,7 @@
 #include <time.h>
 #include <signal.h>
 #include <stdbool.h>
+#include <semaphore.h>
 
 /* the encapsulation of a client thread, i.e., the thread that handles
  * commands from clients */
@@ -36,7 +37,7 @@ struct ThreadHandler {
   client_t* clients;
   pthread_mutex_t clients_mutex;
   pthread_t thread;
-  pthread_cond_t thread_done_cond;
+  sem_t reaping_sem;
   bool pause;
   pthread_cond_t pause_cond;
   pthread_mutex_t pause_mutex;
@@ -116,7 +117,7 @@ void client_destroy(client_t *client)
   window_destroy(client->win);
   //free(client); Let the handler take care of this
   client->done = true;
-  pthread_cond_signal(&client->thread_handler->thread_done_cond);
+  sem_post(&g_thread_handler.reaping_sem);
   pthread_exit(NULL);
 }
 
@@ -224,7 +225,10 @@ void create_non_interactive_client(char* fin, char* fout)
 void pause_clients()
 {
   // No need to lock here for a write (I think...)
+  // But I'm going to anyway (because I don't trust myself)
+  pthread_mutex_lock(&g_thread_handler.pause_mutex);
   g_thread_handler.pause = true;
+  pthread_mutex_unlock(&g_thread_handler.pause_mutex);
 }
 
 void unpause_clients()
@@ -317,10 +321,11 @@ void reap_done_clients(client_t **client)
 
 void *thread_handler_main(void *arg)
 {
-  pthread_mutex_lock(&g_thread_handler.clients_mutex);
   for (;;) {
-    pthread_cond_wait(&g_thread_handler.thread_done_cond, &g_thread_handler.clients_mutex);
+    sem_wait(&g_thread_handler.reaping_sem);
+    pthread_mutex_lock(&g_thread_handler.clients_mutex);
     reap_done_clients(&g_thread_handler.clients);
+    pthread_mutex_unlock(&g_thread_handler.clients_mutex);
     if (g_thread_handler.clients == NULL) {
       pthread_cond_broadcast(&g_thread_handler.threads_done_cond);
     }
@@ -331,11 +336,11 @@ void init_thread_handler(thread_handler_t* t)
 {
   t->clients = NULL;
   pthread_mutex_init(&t->clients_mutex, NULL);
-  pthread_cond_init(&t->thread_done_cond, NULL);
   pthread_mutex_init(&t->pause_mutex, NULL);
   pthread_cond_init(&t->pause_cond, NULL);
   pthread_cond_init(&t->threads_done_cond, NULL);
   t->pause = false;
+  sem_init(&t->reaping_sem, 0, 0);
 }
 
 int main(int argc, char *argv[]) 
