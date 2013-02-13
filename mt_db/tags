@@ -32,7 +32,7 @@ clients_mutex	server.c	/^  pthread_mutex_t clients_mutex;$/;"	m	struct:ThreadHan
 create_client	server.c	/^void create_client() $/;"	f
 create_fifos	window.c	/^static int create_fifos(window_t *new_window) {$/;"	f	file:
 create_non_interactive_client	server.c	/^void create_non_interactive_client(char* fin, char* fout)$/;"	f
-done	server.c	/^  volatile bool done;$/;"	m	struct:Client	file:
+done	server.c	/^  bool done;$/;"	m	struct:Client	file:
 echo	window.h	/^	int echo;$/;"	m	struct:window
 find_white	words.c	/^static inline char *find_white(char *s) {$/;"	f	file:
 free_words	words.c	/^void free_words(char **words) {$/;"	f
@@ -104,7 +104,7 @@ unpause_clients	server.c	/^void unpause_clients()$/;"	f
 value	db.h	/^	char *value;$/;"	m	struct:Node
 wait_for_clients_to_exit	server.c	/^void wait_for_clients_to_exit()$/;"	f
 wait_on_pause	server.c	/^static inline void wait_on_pause()$/;"	f	file:
-win	server.c	/^  window_t *win;$/;"	m	struct:Client	file:
+win	server.c	/^  window_t* win;$/;"	m	struct:Client	file:
 window	window.h	/^typedef struct window {$/;"	s
 window_cleanup	window.c	/^void window_cleanup() {$/;"	f
 window_count	window.c	/^int window_count = 0;$/;"	v

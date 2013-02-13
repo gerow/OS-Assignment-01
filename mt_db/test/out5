@@ -1,0 +1,954 @@
+>> a argentina buenos_aires
+already in database
+>> a chile santiago
+already in database
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+already in database
+>> a bolivia la_paz
+already in database
+>> a peru lima
+already in database
+>> a ecuador quito
+already in database
+>> a venezuela caracas
+already in database
+>> a colombia bogota
+already in database
+>> d chile
+not in database
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> d bolivia
+not in database
+>> d peru
+not in database
+>> d ecuador
+not in database
+>> d venezuela
+not in database
+>> a chile santiago
+already in database
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+added
+>> a bolivia la_paz
+added
+>> a peru lima
+added
+>> a ecuador quito
+added
+>> a venezuela caracas
+added
+>> a colombia bogota
+already in database
+>> d chile
+removed
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> d bolivia
+not in database
+>> d peru
+removed
+>> d ecuador
+removed
+>> d venezuela
+removed
+>> a argentina buenos_aires
+already in database
+>> a chile santiago
+already in database
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+added
+>> a bolivia la_paz
+added
+>> a peru lima
+added
+>> a ecuador quito
+added
+>> a venezuela caracas
+added
+>> a colombia bogota
+already in database
+>> d chile
+removed
+>> q brasil
+brasilia
+>> d uruguay
+removed
+>> d bolivia
+not in database
+>> d peru
+not in database
+>> d ecuador
+not in database
+>> d venezuela
+not in database
+>> d chile
+removed
+>> q brasil
+brasilia
+>> d uruguay
+removed
+>> a chile santiago
+added
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+added
+>> a argentina buenos_aires
+already in database
+>> a chile santiago
+added
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+added
+>> a bolivia la_paz
+added
+>> a peru lima
+added
+>> a ecuador quito
+added
+>> a venezuela caracas
+added
+>> a colombia bogota
+already in database
+>> d chile
+removed
+>> q brasil
+brasilia
+>> d uruguay
+removed
+>> d bolivia
+removed
+>> d peru
+removed
+>> d ecuador
+removed
+>> d venezuela
+removed
+>> a chile santiago
+added
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+added
+>> a bolivia la_paz
+added
+>> a peru lima
+added
+>> a ecuador quito
+added
+>> a venezuela caracas
+added
+>> a colombia bogota
+already in database
+>> d chile
+removed
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> d bolivia
+not in database
+>> d peru
+not in database
+>> d ecuador
+not in database
+>> d venezuela
+not in database
+>> a argentina buenos_aires
+already in database
+>> a chile santiago
+added
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+added
+>> a bolivia la_paz
+already in database
+>> a peru lima
+already in database
+>> a ecuador quito
+already in database
+>> a venezuela caracas
+already in database
+>> a colombia bogota
+already in database
+>> d chile
+not in database
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> d bolivia
+removed
+>> d peru
+removed
+>> d ecuador
+not in database
+>> d venezuela
+removed
+>> d chile
+not in database
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> a chile santiago
+already in database
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+already in database
+>> a argentina buenos_aires
+already in database
+>> a chile santiago
+already in database
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+already in database
+>> a bolivia la_paz
+already in database
+>> a peru lima
+already in database
+>> a ecuador quito
+already in database
+>> a venezuela caracas
+already in database
+>> a colombia bogota
+already in database
+>> d chile
+not in database
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> d bolivia
+not in database
+>> d peru
+not in database
+>> d ecuador
+not in database
+>> d venezuela
+not in database
+>> a chile santiago
+already in database
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+added
+>> a bolivia la_paz
+added
+>> a peru lima
+added
+>> a ecuador quito
+added
+>> a venezuela caracas
+added
+>> a colombia bogota
+already in database
+>> d chile
+removed
+>> q brasil
+brasilia
+>> d uruguay
+removed
+>> d bolivia
+removed
+>> d peru
+not in database
+>> d ecuador
+not in database
+>> d venezuela
+not in database
+>> a argentina buenos_aires
+already in database
+>> a chile santiago
+already in database
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+already in database
+>> a bolivia la_paz
+already in database
+>> a peru lima
+already in database
+>> a ecuador quito
+added
+>> a venezuela caracas
+added
+>> a colombia bogota
+already in database
+>> d chile
+removed
+>> q brasil
+brasilia
+>> d uruguay
+removed
+>> d bolivia
+removed
+>> d peru
+removed
+>> d ecuador
+removed
+>> d venezuela
+removed
+>> d chile
+not in database
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> a chile santiago
+added
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+added
+>> a argentina buenos_aires
+already in database
+>> a chile santiago
+already in database
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+already in database
+>> a bolivia la_paz
+already in database
+>> a peru lima
+already in database
+>> a ecuador quito
+added
+>> a venezuela caracas
+already in database
+>> a colombia bogota
+already in database
+>> d chile
+not in database
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> d bolivia
+not in database
+>> d peru
+not in database
+>> d ecuador
+not in database
+>> d venezuela
+not in database
+>> a chile santiago
+added
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+already in database
+>> a bolivia la_paz
+already in database
+>> a peru lima
+already in database
+>> a ecuador quito
+already in database
+>> a venezuela caracas
+already in database
+>> a colombia bogota
+already in database
+>> d chile
+not in database
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> d bolivia
+not in database
+>> d peru
+not in database
+>> d ecuador
+not in database
+>> d venezuela
+not in database
+>> a argentina buenos_aires
+already in database
+>> a chile santiago
+already in database
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+already in database
+>> a bolivia la_paz
+added
+>> a peru lima
+already in database
+>> a ecuador quito
+already in database
+>> a venezuela caracas
+already in database
+>> a colombia bogota
+already in database
+>> d chile
+removed
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> d bolivia
+not in database
+>> d peru
+removed
+>> d ecuador
+removed
+>> d venezuela
+not in database
+>> d chile
+removed
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> a chile santiago
+added
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+already in database
+>> a argentina buenos_aires
+already in database
+>> a chile santiago
+already in database
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+already in database
+>> a bolivia la_paz
+added
+>> a peru lima
+added
+>> a ecuador quito
+added
+>> a venezuela caracas
+added
+>> a colombia bogota
+already in database
+>> d chile
+not in database
+>> q brasil
+brasilia
+>> d uruguay
+removed
+>> d bolivia
+not in database
+>> d peru
+not in database
+>> d ecuador
+removed
+>> d venezuela
+removed
+>> a chile santiago
+added
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+already in database
+>> a bolivia la_paz
+already in database
+>> a peru lima
+already in database
+>> a ecuador quito
+already in database
+>> a venezuela caracas
+added
+>> a colombia bogota
+already in database
+>> d chile
+not in database
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> d bolivia
+not in database
+>> d peru
+not in database
+>> d ecuador
+not in database
+>> d venezuela
+not in database
+>> a argentina buenos_aires
+already in database
+>> a chile santiago
+added
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+already in database
+>> a bolivia la_paz
+already in database
+>> a peru lima
+already in database
+>> a ecuador quito
+already in database
+>> a venezuela caracas
+already in database
+>> a colombia bogota
+already in database
+>> d chile
+not in database
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> d bolivia
+not in database
+>> d peru
+not in database
+>> d ecuador
+not in database
+>> d venezuela
+not in database
+>> d chile
+removed
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> a chile santiago
+added
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+already in database
+>> a argentina buenos_aires
+already in database
+>> a chile santiago
+added
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+added
+>> a bolivia la_paz
+added
+>> a peru lima
+added
+>> a ecuador quito
+added
+>> a venezuela caracas
+added
+>> a colombia bogota
+already in database
+>> d chile
+removed
+>> q brasil
+brasilia
+>> d uruguay
+removed
+>> d bolivia
+removed
+>> d peru
+removed
+>> d ecuador
+removed
+>> d venezuela
+not in database
+>> a chile santiago
+added
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+already in database
+>> a bolivia la_paz
+already in database
+>> a peru lima
+added
+>> a ecuador quito
+added
+>> a venezuela caracas
+added
+>> a colombia bogota
+already in database
+>> d chile
+removed
+>> q brasil
+brasilia
+>> d uruguay
+removed
+>> d bolivia
+not in database
+>> d peru
+not in database
+>> d ecuador
+removed
+>> d venezuela
+not in database
+>> a argentina buenos_aires
+already in database
+>> a chile santiago
+already in database
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+added
+>> a bolivia la_paz
+added
+>> a peru lima
+added
+>> a ecuador quito
+added
+>> a venezuela caracas
+added
+>> a colombia bogota
+already in database
+>> d chile
+not in database
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> d bolivia
+not in database
+>> d peru
+not in database
+>> d ecuador
+removed
+>> d venezuela
+removed
+>> d chile
+removed
+>> q brasil
+brasilia
+>> d uruguay
+removed
+>> a chile santiago
+already in database
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+added
+>> a argentina buenos_aires
+already in database
+>> a chile santiago
+already in database
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+already in database
+>> a bolivia la_paz
+added
+>> a peru lima
+added
+>> a ecuador quito
+added
+>> a venezuela caracas
+added
+>> a colombia bogota
+already in database
+>> d chile
+removed
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> d bolivia
+not in database
+>> d peru
+not in database
+>> d ecuador
+not in database
+>> d venezuela
+not in database
+>> a chile santiago
+added
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+added
+>> a bolivia la_paz
+already in database
+>> a peru lima
+already in database
+>> a ecuador quito
+already in database
+>> a venezuela caracas
+already in database
+>> a colombia bogota
+already in database
+>> d chile
+removed
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> d bolivia
+removed
+>> d peru
+removed
+>> d ecuador
+not in database
+>> d venezuela
+not in database
+>> a argentina buenos_aires
+already in database
+>> a chile santiago
+added
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+added
+>> a bolivia la_paz
+added
+>> a peru lima
+added
+>> a ecuador quito
+added
+>> a venezuela caracas
+added
+>> a colombia bogota
+already in database
+>> d chile
+not in database
+>> q brasil
+brasilia
+>> d uruguay
+removed
+>> d bolivia
+removed
+>> d peru
+removed
+>> d ecuador
+removed
+>> d venezuela
+removed
+>> d chile
+not in database
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> a chile santiago
+already in database
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+already in database
+>> a argentina buenos_aires
+already in database
+>> a chile santiago
+added
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+added
+>> a bolivia la_paz
+already in database
+>> a peru lima
+already in database
+>> a ecuador quito
+already in database
+>> a venezuela caracas
+already in database
+>> a colombia bogota
+already in database
+>> d chile
+not in database
+>> q brasil
+brasilia
+>> d uruguay
+removed
+>> d bolivia
+removed
+>> d peru
+not in database
+>> d ecuador
+not in database
+>> d venezuela
+removed
+>> a chile santiago
+already in database
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+added
+>> a bolivia la_paz
+added
+>> a peru lima
+added
+>> a ecuador quito
+added
+>> a venezuela caracas
+added
+>> a colombia bogota
+already in database
+>> d chile
+removed
+>> q brasil
+brasilia
+>> d uruguay
+removed
+>> d bolivia
+removed
+>> d peru
+removed
+>> d ecuador
+removed
+>> d venezuela
+removed
+>> a argentina buenos_aires
+already in database
+>> a chile santiago
+added
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+added
+>> a bolivia la_paz
+added
+>> a peru lima
+added
+>> a ecuador quito
+added
+>> a venezuela caracas
+added
+>> a colombia bogota
+already in database
+>> d chile
+removed
+>> q brasil
+brasilia
+>> d uruguay
+removed
+>> d bolivia
+removed
+>> d peru
+removed
+>> d ecuador
+removed
+>> d venezuela
+removed
+>> d chile
+not in database
+>> q brasil
+brasilia
+>> d uruguay
+removed
+>> a chile santiago
+added
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+added
+>> a argentina buenos_aires
+already in database
+>> a chile santiago
+added
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+added
+>> a bolivia la_paz
+already in database
+>> a peru lima
+added
+>> a ecuador quito
+added
+>> a venezuela caracas
+added
+>> a colombia bogota
+already in database
+>> d chile
+removed
+>> q brasil
+brasilia
+>> d uruguay
+removed
+>> d bolivia
+not in database
+>> d peru
+not in database
+>> d ecuador
+not in database
+>> d venezuela
+not in database
+>> a chile santiago
+already in database
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+already in database
+>> a bolivia la_paz
+already in database
+>> a peru lima
+already in database
+>> a ecuador quito
+already in database
+>> a venezuela caracas
+already in database
+>> a colombia bogota
+already in database
+>> d chile
+not in database
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> d bolivia
+not in database
+>> d peru
+not in database
+>> d ecuador
+not in database
+>> d venezuela
+not in database
+>> a argentina buenos_aires
+already in database
+>> a chile santiago
+already in database
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+already in database
+>> a bolivia la_paz
+already in database
+>> a peru lima
+already in database
+>> a ecuador quito
+already in database
+>> a venezuela caracas
+already in database
+>> a colombia bogota
+already in database
+>> d chile
+not in database
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> d bolivia
+not in database
+>> d peru
+not in database
+>> d ecuador
+not in database
+>> d venezuela
+not in database
+>> d chile
+removed
+>> q brasil
+brasilia
+>> d uruguay
+not in database
+>> a chile santiago
+added
+>> a brasil brasilia
+already in database
+>> a uruguay montevideo
+already in database

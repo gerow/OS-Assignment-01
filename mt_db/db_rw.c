@@ -10,35 +10,22 @@ node_t *search(char *, node_t *, node_t **);
 
 node_t head = { "", "", 0, 0 };
 
-pthread_mutex_t g_reader_mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t g_writer_mutex = PTHREAD_MUTEX_INITIALIZER;
-int g_num_readers = 0;
-
+pthread_rwlock_t g_rwlock;
 
 static inline void begin_reading() {
-  pthread_mutex_lock(&g_reader_mutex);
-  if (g_num_readers == 0) {
-    pthread_mutex_lock(&g_writer_mutex);
-  }
-  ++g_num_readers;
-  pthread_mutex_unlock(&g_reader_mutex);
+  pthread_rwlock_rdlock(&g_rwlock);
 }
 
 static inline void begin_writing() {
-  pthread_mutex_lock(&g_writer_mutex);
+  pthread_rwlock_wrlock(&g_rwlock);
 }
 
 static inline void end_reading() {
-  pthread_mutex_lock(&g_reader_mutex);
-  --g_num_readers;
-  if (g_num_readers == 0) {
-    pthread_mutex_unlock(&g_writer_mutex);
-  }
-  pthread_mutex_unlock(&g_reader_mutex);
+  pthread_rwlock_unlock(&g_rwlock);
 }
 
 static inline void end_writing() {
-  pthread_mutex_unlock(&g_writer_mutex);
+  pthread_rwlock_unlock(&g_rwlock);
 }
 
 /*
@@ -84,9 +71,7 @@ void node_destroy(node_t * node) {
 void query(char *name, char *result, int len) {
     node_t *target;
 
-    begin_reading();
     target = search(name, &head, NULL);
-    end_reading();
 
     if (!target) {
 	strncpy(result, "not found", len - 1);
@@ -110,15 +95,15 @@ int add(char *name, char *value) {
 	}
 
 	/* No idea how this could happen, but... */
-	if (!parent) return 0;
+	if (!parent) {
+          return 0;
+        }
 
 	/* make the new node and attach it to parent */
 	newnode = node_create(name, value, 0, 0);
 
-        begin_writing();
 	if (strcmp(name, parent->name) < 0) parent->lchild = newnode;
 	else parent->rchild = newnode;
-        end_writing();
 
 	return 1;
 }
@@ -145,12 +130,9 @@ int xremove(char *name) {
 	node_t **pnext;	    /* A pointer in the tree that points to next so we
 			       can change that nodes children (see below). */
 
-        begin_writing();
-
 	/* first, find the node to be removed */
 	if (!(dnode = search(name, &head, &parent))) {
 	    /* it's not there */
-            end_writing();
 	    return 0;
 	}
 
@@ -203,7 +185,6 @@ int xremove(char *name) {
 	    node_destroy(next);
     }
 
-    end_writing();
     return 1;
 }
 
@@ -256,6 +237,15 @@ void interpret_command(char *command, char *response, int len)
     char ibuf[256];
     char name[256];
 
+    static int init = 0;
+
+    if (!init) {
+      pthread_rwlockattr_t attr;
+      pthread_rwlockattr_setkind_np(&attr, PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP);
+      pthread_rwlock_init(&g_rwlock, &attr);
+      init = 1;
+    }
+
     if (strlen(command) <= 1) {
 	strncpy(response, "ill-formed command", len - 1);
 	return;
@@ -270,7 +260,9 @@ void interpret_command(char *command, char *response, int len)
 	    return;
 	}
 
+        begin_reading();
 	query(name, response, len);
+        end_reading();
 	if (strlen(response) == 0) {
 	    strncpy(response, "not found", len - 1);
 	}
@@ -285,11 +277,13 @@ void interpret_command(char *command, char *response, int len)
 	    return;
 	}
 
+        begin_writing();
 	if (add(name, value)) {
 	    strncpy(response, "added", len - 1);
 	} else {
 	    strncpy(response, "already in database", len - 1);
 	}
+        end_writing();
 
 	return;
 
@@ -301,11 +295,13 @@ void interpret_command(char *command, char *response, int len)
 	    return;
 	}
 
+        begin_writing();
 	if (xremove(name)) {
 	    strncpy(response, "removed", len - 1);
 	} else {
 	    strncpy(response, "not in database", len - 1);
 	}
+        end_writing();
 
 	    return;
 

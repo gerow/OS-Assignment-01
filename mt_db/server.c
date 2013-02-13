@@ -26,7 +26,7 @@ typedef struct ThreadHandler thread_handler_t;
 struct Client {
   int id;
   pthread_t thread;
-  window_t *win;
+  window_t* win;
   bool done;
   thread_handler_t* thread_handler;
   struct Client* next;
