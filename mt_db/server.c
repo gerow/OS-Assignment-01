@@ -297,9 +297,9 @@ void handle_main_command(char *command)
 
 void reap_done_clients(client_t **client)
 {
-  if (*(client) == NULL) { return; } // There aren't any clients!
+  if (*client == NULL) { return; } // There aren't any clients!
 
-  while ((*client) != NULL) {
+  for ( ; *client != NULL; client = &(*client)->next) {
     if ((*client)->done) {
       int rc = 0;
       //This is one of the threads we're looking for!
@@ -313,10 +313,8 @@ void reap_done_clients(client_t **client)
       client_t *clean_me_up = *client;
       (*client) = (*client)->next;
       client_cleanup(clean_me_up);
+      break;
     } 
-    else {
-      client = &(*client)->next;
-    }
   }
 }
 
