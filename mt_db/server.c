@@ -299,20 +299,20 @@ void reap_done_clients(client_t **client)
 {
   if (*client == NULL) { return; } // There aren't any clients!
 
-  for ( ; *client != NULL; client = &(*client)->next) {
-    if ((*client)->done) {
+  for ( ;*client; client = &(*client)->next) {
+    client_t *entry = *client;
+    if (entry->done) {
       int rc = 0;
       //This is one of the threads we're looking for!
       //So kill it!
-      rc = pthread_join((*client)->thread, NULL);
+      rc = pthread_join(entry->thread, NULL);
       if (rc) {
         fprintf(stderr, "ERROR: pthread_join returned %d", rc);
       }
-      fprintf(stdout, "Client %i has exited!\n", (*client)->id); 
+      fprintf(stdout, "Client %i has exited!\n", entry->id); 
       // Deallocate everything
-      client_t *clean_me_up = *client;
-      (*client) = (*client)->next;
-      client_cleanup(clean_me_up);
+      *client = entry->next;
+      client_cleanup(entry);
       break;
     } 
   }
