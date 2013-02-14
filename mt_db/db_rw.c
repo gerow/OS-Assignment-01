@@ -243,10 +243,14 @@ void interpret_command(char *command, char *response, int len)
   static int initialized = 0;
 
   if (!initialized) {
+      #ifdef __linux
       pthread_rwlockattr_t attr;
       pthread_rwlockattr_setkind_np(&attr, PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP);
-    pthread_rwlock_init(&g_rwlock, &attr);
-    initialized = 1;
+      pthread_rwlock_init(&g_rwlock, &attr);
+      #else
+      pthread_rwlock_init(&g_rwlock, NULL);
+      #endif /* __linux */
+      initialized = 1;
   }
 
   if (strlen(command) <= 1) {
