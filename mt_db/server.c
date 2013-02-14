@@ -52,6 +52,14 @@ int handle_command(char *, char *, int len);
 //Global thread handler (just to make things simpler)
 thread_handler_t g_thread_handler;
 
+static inline void abort_if_null(void *value, char *message) {
+  if (value == NULL) {
+    fprintf(stdout, "%s\n", message);
+    fprintf(stdout, "Aborting and dumping core\n");
+    abort();
+  }
+}
+
 /*
  * Create an interactive client - one with its own window.  This routine
  * creates the window (which starts the xterm and a process under it.  The
@@ -199,10 +207,7 @@ void create_client()
 
   c = client_create(started++);
 
-  if (c == NULL) {
-    fprintf(stdout, "uhh malloc returned NULL (so I'm going to panic).\n");
-    exit(1);
-  }
+  abort_if_null(c, "client_create() failed while creating client");
 
   add_client_to_thread_handler(c);
   launch_client_thread(c);
@@ -212,11 +217,7 @@ void create_non_interactive_client(char* fin, char* fout)
 {
   client_t *c = NULL;
   c = client_create_no_window(fin, fout);
-
-  if (c == NULL) {
-    fprintf(stdout, "uhh malloc returned NULL (so I'm going to panic).\n");
-    exit(1);
-  }
+  abort_if_null(c, "malloc() failed while creating non interactive client");
 
   add_client_to_thread_handler(c);
   launch_client_thread(c);
@@ -348,6 +349,7 @@ int main(int argc, char *argv[])
   char* command;
   size_t command_nbytes = 100;
   command = malloc(command_nbytes + 1);
+  abort_if_null(command, "malloc() failed when allocating command");
   //Initialize thread_handler
   init_thread_handler(&g_thread_handler);
 
