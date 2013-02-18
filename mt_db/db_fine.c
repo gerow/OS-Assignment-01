@@ -1,4 +1,4 @@
-#include "db.h"
+#include "db_fine.h"
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
@@ -30,6 +30,8 @@ node_t *node_create(char *arg_name, char *arg_value, node_t * arg_left,
 	return NULL;
     }
 
+    pthread_rwlock_init(&new_node->rwlock, NULL);
+
     strcpy(new_node->name, arg_name);
     strcpy(new_node->value, arg_value);
     new_node->lchild = arg_left;
@@ -52,6 +54,7 @@ void node_destroy(node_t * node) {
 void query(char *name, char *result, int len) {
     node_t *target;
 
+    pthread_rwlock_rdlock(&head.rwlock);
     target = search(name, &head, NULL);
 
     if (!target) {
@@ -59,6 +62,7 @@ void query(char *name, char *result, int len) {
 	return;
     } else {
 	strncpy(result, target->value, len - 1);
+        pthread_rwlock_unlock(&target->rwlock);
 	return;
     }
 }
@@ -174,7 +178,8 @@ int xremove(char *name) {
  * the parent of the target node, if it were there.
  *
  * Assumptions:
- * parent is not null and it does not contain name */
+ * parent is not null and it does not contain name
+ * we have a read lock on the parent */
 node_t *search(char *name, node_t * parent, node_t ** parentpp) {
 
     node_t *next;
@@ -184,8 +189,11 @@ node_t *search(char *name, node_t * parent, node_t ** parentpp) {
     else next = parent->rchild;
 
     if (next == NULL) {
+        pthread_rwlock_unlock(&parent->rwlock);
 	result = NULL;
     } else {
+        pthread_rwlock_rdlock(&next->rwlock);
+        pthread_rwlock_unlock(&parent->rwlock);
 	if (strcmp(name, next->name) == 0) {
 	    /* Note that this falls through to the if (parentpp .. ) statement
 	     * below. */
@@ -193,6 +201,7 @@ node_t *search(char *name, node_t * parent, node_t ** parentpp) {
 	} else {
 	    /* "We have to go deeper!" This recurses and returns from here
 	     * after the recursion has returned result and set parentpp */
+            // Only unlock if we haven't found the final value
 	    result = search(name, next, parentpp);
 	    return result;
 	}
