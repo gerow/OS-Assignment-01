@@ -134,6 +134,13 @@ void client_cleanup(client_t *client)
   free(client);
 }
 
+/**
+ * Clients call this in order to make sure that they wait if we are currently paused.
+ *
+ * I try to do some fancy stuff in order to avoid unnecessary locking, but it does not
+ * seem to be noticeably faster than a simpler implementation that locks every time through.
+ * This might need some more study, though.
+ */
 static inline void wait_on_pause()
 {
   // I'm not sure if this whole double if thing is necessary or not
@@ -183,6 +190,11 @@ int handle_command(char *command, char *response, int len)
   return 1;
 }
 
+/**
+ * This function simply locks the thread handler's
+ * linked list of clients, adds the given client to it
+ * and then unlocks the list
+ */
 void add_client_to_thread_handler(client_t *c)
 {
   // Add this thread's info to the clients linked list
@@ -195,11 +207,19 @@ void add_client_to_thread_handler(client_t *c)
   pthread_mutex_unlock(&g_thread_handler.clients_mutex);
 }
 
+/**
+ * Simply call pthread_create on the given
+ * clients thread member in order to get it
+ * to run the client_run function
+ */
 void launch_client_thread(client_t *c)
 {
   pthread_create(&c->thread, NULL, client_run, c); 
 }
 
+/**
+ * Allocate and launch a client in a new thread.
+ */
 void create_client() 
 {
   static int started = 0;
@@ -207,22 +227,38 @@ void create_client()
 
   c = client_create(started++);
 
+  // If the allocation failed we can't really do much...
   abort_if_null(c, "client_create() failed while creating client");
 
+  // Make sure the thread handler knows about our new client
   add_client_to_thread_handler(c);
+  // Actually start a new thread for the client and run it
   launch_client_thread(c);
 }
 
+/**
+ * Allocate and launch a non interactive client in one go.
+ */
 void create_non_interactive_client(char* fin, char* fout)
 {
   client_t *c = NULL;
   c = client_create_no_window(fin, fout);
+  // Not much else we can do
   abort_if_null(c, "malloc() failed while creating non interactive client");
 
   add_client_to_thread_handler(c);
   launch_client_thread(c);
 }
 
+/**
+ * Pause the clients.
+ *
+ * This function grabs the thread handler's pause_mutex,
+ * sets its pause value to true, and then unlocks it.
+ * 
+ * This will cause the clients to stop executing commands the next
+ * time that they run wait_on_pause
+ */
 void pause_clients()
 {
   // No need to lock here for a write (I think...)
@@ -232,6 +268,14 @@ void pause_clients()
   pthread_mutex_unlock(&g_thread_handler.pause_mutex);
 }
 
+/**
+ * Unpause the clients.
+ *
+ * Again, lock the mutex, set pause to false, and then
+ * unlok the mutex.  After that just broadcast the condition
+ * variable so that any threads that are currently waiting on
+ * it will unpause.
+ */
 void unpause_clients()
 {
   if (!g_thread_handler.pause) { return; }
@@ -243,6 +287,13 @@ void unpause_clients()
   pthread_cond_broadcast(&g_thread_handler.pause_cond);
 }
 
+/**
+ * This function is called by the main function when it exits.
+ *
+ * This will cause any calling function to simply block while there
+ * are still clients running by waiting on the threads_done_cond condition
+ * variable until the thread handler broadcasts it.
+ */
 void wait_for_clients_to_exit()
 {
   pthread_mutex_lock(&g_thread_handler.clients_mutex);
@@ -252,6 +303,10 @@ void wait_for_clients_to_exit()
   pthread_mutex_unlock(&g_thread_handler.clients_mutex);
 }
 
+/**
+ * Handle any one of the supported commands
+ * say ill-formed command otherwise.
+ */
 void handle_main_command(char *command) 
 {
   switch (command[0]) {
@@ -261,16 +316,22 @@ void handle_main_command(char *command)
       break;
     case 'E':
       {
+        // Allocate a space on the stack to
+        // throw a pointer to the words
         char **words = NULL;
         words = split_words(command);
         int num_words;
+        // Count up the number of words returned
         for (num_words = 0; words[num_words] != NULL; ++num_words);
+        // If it isn't 3 say it is an ill formed command and do nothing.
         if (num_words != 3) {
-          fprintf(stdout, "ill-formed command");
+          fprintf(stdout, "ill-formed command\n");
           return;
         }
+        // If it worked announce what we're doing
         fprintf(stdout, "creating new non interactive client from %s to %s\n", words[1], words[2]); 
         create_non_interactive_client(words[1], words[2]);
+        // Make sure we don't leak memory
         free_words(words);
       }
       break;
@@ -295,12 +356,20 @@ void handle_main_command(char *command)
   }
 }
 
+/**
+ * Called by the thread handler to join clients that have
+ * completed.
+ */
 void reap_done_clients(client_t **client)
 {
+  // If there aren't any just return
   if (*client == NULL) { return; } // There aren't any clients!
 
+  // Iterate over the clients
   for ( ;*client; client = &(*client)->next) {
     client_t *entry = *client;
+    // If this client is done join with it, remove it from out list
+    // and deallocate it.
     if (entry->done) {
       int rc = 0;
       //This is one of the threads we're looking for!
@@ -318,19 +387,32 @@ void reap_done_clients(client_t **client)
   }
 }
 
+/**
+ * The thread handler (which I also like to call the
+ * thread reaper) simply sits around waiting to join with
+ * threads that have finished.  It uses a semaphore in order
+ * to do this so that it can handle multiple clients exiting at
+ * the same time gracefully.
+ */
 void *thread_handler_main(void *arg)
 {
   for (;;) {
+    // Wait on a semaphore until a thread exits
     sem_wait(&g_thread_handler.reaping_sem);
+    // Lock the clients list so we can use it
     pthread_mutex_lock(&g_thread_handler.clients_mutex);
     reap_done_clients(&g_thread_handler.clients);
     pthread_mutex_unlock(&g_thread_handler.clients_mutex);
+    // If we just deleted the last client broadcast that we have done so
     if (g_thread_handler.clients == NULL) {
       pthread_cond_broadcast(&g_thread_handler.threads_done_cond);
     }
   }
 }
 
+/**
+ * Initialize a new thred handler type
+ */
 void init_thread_handler(thread_handler_t* t)
 {
   t->clients = NULL;
