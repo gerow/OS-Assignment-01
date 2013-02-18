@@ -74,29 +74,29 @@
 
 \section{e Command}
 
-The e command works by calling a function called create_client() which calls the client_create function in order to allocate the client.  After the client is created we then call add_client_to_thread_handler which adds the client to the thread handler's list of running clients.  In order to do this it gets a lock on the list, adds itself to it, and then unlocks.  After that we simpl call the launch_client_thread function which calls pthread_create on the thread, running the client_run code.
+The e command works by calling a function called create\_client() which calls the client\_create function in order to allocate the client.  After the client is created we then call add\_client\_to\_thread\_handler which adds the client to the thread handler's list of running clients.  In order to do this it gets a lock on the list, adds itself to it, and then unlocks.  After that we simpl call the launch\_client\_thread function which calls pthread\_create on the thread, running the client\_run code.
 
-When the thread has finished it simply sets its (newly added) done flag to true and increments the thread handler's semaphore. This causes the thread handler to go through its list of clients looking for one to clean up. When it finds one it calls pthread_join on the thread and cleans up any of its other resources.
+When the thread has finished it simply sets its (newly added) done flag to true and increments the thread handler's semaphore. This causes the thread handler to go through its list of clients looking for one to clean up. When it finds one it calls pthread\_join on the thread and cleans up any of its other resources.
 
 \section{E Command}
 
-The E command works very similarly to the e command with the exception that it pulls additional arguments from the command command interface in order to acquire the input and output files it needs. Once it has these it simply calls create_non_interactive_client which calls client_create_no_window which we, like with the e command, simply add to the thread handler's list of running clients and then launch the client in much the same way.
+The E command works very similarly to the e command with the exception that it pulls additional arguments from the command command interface in order to acquire the input and output files it needs. Once it has these it simply calls create\_non\_interactive\_client which calls client\_create\_no\_window which we, like with the e command, simply add to the thread handler's list of running clients and then launch the client in much the same way.
 
 \section{s Command}
 
 The s command by using a pause flag in the thread handler's data. When the command is called we simply acquire the mutex for that flag, set the flag to true, and then unlock the mutex.
 
-In the client threads we call a function called wait_on_pause which first checks to see if we are paused, and if we are, acquires the pause mutex and checks again.  If we are still paused it waits on the pause_cond condition variable which is broadcasted when the g command is run.
+In the client threads we call a function called wait\_on\_pause which first checks to see if we are paused, and if we are, acquires the pause mutex and checks again.  If we are still paused it waits on the pause\_cond condition variable which is broadcasted when the g command is run.
 
 The intention of this double checking is to prevent unnecessary locking and unlocking of the pause mutex, which I assumed would cause performance issues.  In my tests, though, I have found only a moderate if any increase in performance due to using this technique.
 
 \section{g Command}
 
-The g command simply grabs the pause mutex, sets pause to false, and then broadcasts the pause_mutex, freeing all the threads blocking on this condition and allowing them to continue execution.
+The g command simply grabs the pause mutex, sets pause to false, and then broadcasts the pause\_mutex, freeing all the threads blocking on this condition and allowing them to continue execution.
 
 \section{w Command}
 
-In order to handle the w command we first get a lock on the clients list and, if it is not empty, wait on the threads_done_cond condition variable, which is fired on the thread handler when it cleans up a thread and notices that there are no more threads in the list.  Once this happens the thread continues through and allows us to execute additional commands.
+In order to handle the w command we first get a lock on the clients list and, if it is not empty, wait on the threads\_done\_cond condition variable, which is fired on the thread handler when it cleans up a thread and notices that there are no more threads in the list.  Once this happens the thread continues through and allows us to execute additional commands.
 
 \section{EOF Handling}
 

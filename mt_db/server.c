@@ -323,8 +323,10 @@ void handle_main_command(char *command)
         int num_words;
         // Count up the number of words returned
         for (num_words = 0; words[num_words] != NULL; ++num_words);
-        // If it isn't 3 say it is an ill formed command and do nothing.
-        if (num_words != 3) {
+        // If it isn't 3 or 2 say it is an ill formed command and do nothing.
+        // We allow 2 because the built in function allows the second argument
+        // to be null if we just want to redirec client output to stdout
+        if ((num_words != 3) && (num_words != 2)) {
           fprintf(stdout, "ill-formed command\n");
           return;
         }

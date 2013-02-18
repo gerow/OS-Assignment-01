@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.2.18)  18 FEB 2013 14:07
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.2.18)  18 FEB 2013 14:39
 entering extended mode
  %&-line parsing enabled.
-**commands.tex
-(./commands.tex
+**coarse.tex
+(./coarse.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
 yphenation, farsi, arabic, croatian, bulgarian, ukrainian, russian, czech, slov
@@ -389,8 +389,8 @@ les
 \f@ncyO@erf=\skip59
 \f@ncyO@olf=\skip60
 \f@ncyO@orf=\skip61
-) (./commands.aux)
-\openout1 = `commands.aux'.
+) (./coarse.aux)
+\openout1 = `coarse.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 67.
 LaTeX Font Info:    ... okay on input line 67.
@@ -472,42 +472,24 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 70.
 
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
-)
-Overfull \hbox (0.18674pt too wide) in paragraph at lines 77--78
-\T1/futs/m/n/10.95 The e com-mand works by call-ing a func-tion called cre-ate_
-client() which calls the client_create
- []
+) [1
 
 
-Overfull \hbox (60.21812pt too wide) in paragraph at lines 77--78
-\T1/futs/m/n/10.95 func-tion in or-der to al-lo-cate the client. Af-ter the cli
-ent is cre-ated we then call add_client_to_thread_handler
- []
-
-
-Overfull \hbox (19.18863pt too wide) in paragraph at lines 77--78
-\T1/futs/m/n/10.95 lock on the list, adds it-self to it, and then un-locks. Af-
-ter that we simpl call the launch_client_thread
- []
-
-[1
-
-
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] (./commands.aux) ) 
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./coarse.aux) ) 
 Here is how much of TeX's memory you used:
- 3567 strings out of 493848
- 47926 string characters out of 1152823
- 205138 words of memory out of 3000000
- 6789 multiletter control sequences out of 15000+50000
- 48038 words of font info for 56 fonts, out of 3000000 for 9000
+ 3574 strings out of 493848
+ 47984 string characters out of 1152823
+ 203138 words of memory out of 3000000
+ 6792 multiletter control sequences out of 15000+50000
+ 54228 words of font info for 61 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
- 35i,10n,43p,520b,223s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/us
-r/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texlive/fon
-ts/type1/adobe/utopia/putr8a.pfb>
-Output written on commands.pdf (2 pages, 23923 bytes).
+ 35i,10n,43p,526b,223s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/shar
+e/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texlive/fonts/typ
+e1/adobe/utopia/putr8a.pfb>
+Output written on coarse.pdf (1 page, 20638 bytes).
 PDF statistics:
- 14 PDF objects out of 1000 (max. 8388607)
+ 11 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
