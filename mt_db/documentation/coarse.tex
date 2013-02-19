@@ -77,4 +77,12 @@ The coarase grained locking for the database is quite simple.  We only have one 
 
 \subsection{Testing}
 I have a few methods for testing coarse grained.  First I tried simply calling 250 instances of the build in test2 and unpausing them all at the same time just to see if it ran though.  After that I constructed a test that adds a series of numbers to the database, queries them, and then deletes them all. I then ran this with 250 instances.  Because of the way the adds and removes are set up we should end up with an empty database at the end no matter what order the clients executed in, and sure enough we do.
+
+This specific test can be run using this command (from within the mt\_db directory):
+
+\begin{verbatim}
+./server_coarse < test/250_add_remove | tail -n 800 | less
+\end{verbatim}
+
+The tail and less command are only there to grab the final dump of the database so that we can verify that the database is in fact empty.
 \end{document}

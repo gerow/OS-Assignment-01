@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.2.18)  18 FEB 2013 16:23
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.2.18)  18 FEB 2013 16:37
 entering extended mode
  %&-line parsing enabled.
-**coarse.tex
-(./coarse.tex
+**rw.tex
+(./rw.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
 yphenation, farsi, arabic, croatian, bulgarian, ukrainian, russian, czech, slov
@@ -389,8 +389,9 @@ les
 \f@ncyO@erf=\skip59
 \f@ncyO@olf=\skip60
 \f@ncyO@orf=\skip61
-) (./coarse.aux)
-\openout1 = `coarse.aux'.
+)
+No file rw.aux.
+\openout1 = `rw.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 67.
 LaTeX Font Info:    ... okay on input line 67.
@@ -406,7 +407,6 @@ LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 67.
 LaTeX Font Info:    ... okay on input line 67.
 LaTeX Font Info:    Checking defaults for FML/futm/m/it on input line 67.
 LaTeX Font Info:    Try loading font information for FML+futm on input line 67.
-
 
 (/usr/share/texmf-texlive/tex/latex/fourier/fmlfutm.fd
 File: fmlfutm.fd 2004/10/30 Fontinst v1.926 font definitions for FML/futm.
@@ -473,27 +473,31 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 70.
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 83.
+Overfull \hbox (50.72105pt too wide) in paragraph at lines 78--79
+\T1/futs/m/n/10.95 or-der to solve this we en-able the at-tribute PTHREAD_RWLOC
+K_PREFER_WRITER_NONRECURSIVE_NP
+ []
 
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 83.
 (/usr/share/texmf-texlive/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 ) [1
 
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./coarse.aux) ) 
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./rw.aux) ) 
 Here is how much of TeX's memory you used:
- 3596 strings out of 493848
- 48627 string characters out of 1152823
- 204138 words of memory out of 3000000
+ 3594 strings out of 493848
+ 48577 string characters out of 1152823
+ 205138 words of memory out of 3000000
  6810 multiletter control sequences out of 15000+50000
  54542 words of font info for 62 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
- 35i,10n,43p,526b,223s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/shar
-e/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/usr/share/texmf-texlive/font
-s/enc/dvips/base/8r.enc}</usr/share/texmf-texlive/fonts/type1/adobe/utopia/putr
-8a.pfb></usr/share/texmf/fonts/type1/public/cm-super/sftt1095.pfb>
-Output written on coarse.pdf (1 page, 49948 bytes).
+ 35i,10n,43p,851b,223s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/share/te
+xmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/usr/share/texmf-texlive/fonts/en
+c/dvips/base/8r.enc}</usr/share/texmf-texlive/fonts/type1/adobe/utopia/putr8a.p
+fb></usr/share/texmf/fonts/type1/public/cm-super/sftt1095.pfb>
+Output written on rw.pdf (1 page, 51171 bytes).
 PDF statistics:
  16 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

@@ -15,6 +15,7 @@ node_t head = { "", "", 0, 0 };
  * Allocate a new node with the given key, value and children.
  */
 
+// The global rw lock that our threads will use
 pthread_rwlock_t g_rwlock;
 
 node_t *node_create(char *arg_name, char *arg_value, node_t * arg_left,
