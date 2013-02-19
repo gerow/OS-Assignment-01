@@ -84,5 +84,7 @@ We test the correctness of the read write lock similarly to the corarse grained 
 ./server_rw < test/250_add_remove | tail -n 800 | less
 \end{verbatim}
 
+Of course, we should also expect an increase in speed for read write locking.  It turns out that this is only true for certain types of accesses of the database. Performance testing will be covered in the performance document.
+
 
 \end{document}
