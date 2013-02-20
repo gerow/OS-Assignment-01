@@ -7,6 +7,8 @@
 
 /* Forward declaration */
 node_t *search(char *, node_t *, node_t **);
+node_t *query_search(char *name);
+node_t *add_search(char *name, node_t ** parentpp);
 
 node_t head = { "", "", 0, 0 };
 /*
@@ -54,8 +56,7 @@ void node_destroy(node_t * node) {
 void query(char *name, char *result, int len) {
     node_t *target;
 
-    pthread_rwlock_rdlock(&head.rwlock);
-    target = search(name, &head, NULL);
+    target = query_search(name);
 
     if (!target) {
 	strncpy(result, "not found", len - 1);
@@ -211,6 +212,15 @@ node_t *search(char *name, node_t * parent, node_t ** parentpp) {
     if (parentpp != 0) *parentpp = parent;
 
     return (result);
+}
+
+node_t *query_search(char *name) {
+  pthread_rwlock_rdlock(&head.rwlock);
+  return search(name, &head, NULL);
+}
+
+node_t *add_search(char *name, node_t ** parentpp) {
+
 }
 
 /*
