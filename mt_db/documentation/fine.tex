@@ -1,0 +1,99 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment
+% LaTeX Template
+% Version 1.0 (5/5/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
+
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage[english]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\usepackage{sectsty} % Allows customizing section commands
+\allsectionsfont{\centering \normalfont} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+\normalfont \normalsize 
+\textsc{University of Southern California} \\ [25pt] % Your university, school and/or department name(s)
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge CS402 Assignment 01 -- Read/Write Locking \\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Michael Gerow} % Your name
+
+\date{\normalsize\today} % Today's date or a custom date
+
+\begin{document}
+
+\maketitle % Print the title
+
+%----------------------------------------------------------------------------------------
+%	PROBLEM 1
+%----------------------------------------------------------------------------------------
+
+\section{Fine Grained Locking}
+Fine grained locking is really the first locking style that differs significantly from coarse grained locking. With fine grained locking each node has its own pthread\_rwlock\_t, and we modify the search function in order to properly lock nodes as we traverse the tree.
+
+From a high level, we modify search to expect the head node to be locked upon entry. Then as we traverse the tree we either grab and drop read locks or write locks depending upon the presence of the parentpp value.  If it is present then we are either doing an add or a delete, so we should try to end the search with a write lock on both the target and its parent (or just its parent if the taget doesn't exist).  If the parentpp value is not present then we try to end the search with a read lock on the target (but not the parent).  If there is no target, of course, we exit with a read lock on nothing.
+
+This allows us to essentially leave most of the query, add, and xremove functions unmodified save for the requirement to lock a node with the correct type of lock before calling the search function.
+
+Within the query function we simply get a read lock on the head before we call search and then make sure we unlock the target before returning.  Though, if we return without a target there is nothing we need to unlock.
+
+With the add function need to make sure to get a write lock on the head before calling search.  Then, if we find a node already exists at the location, we simply unlock the write lock on both the parent and the target we discover.  Otherwise, we create a new node, put it on the correct side of the parent, and then unlock the parent.
+
+With the xremove function we have a special case for when the node we want to delete has two children.  In this case we simply collect and release write locks down the left side of the right subtree until we find a node with a left child that we can put in the removed node's place, all the while maintaining our write lock on the original node.  Once this is completed we realease our lock on the node we deleted, the parent of the node we deleted, and the node that we just moved into its place. 
+
+
+\subsection{Testing}
+We test the correctness of the read write lock similarly to the read writer lock, using the test that adds a lot of elements to the database and then removes them, which should leave us with an empty database. This can, like with read write, be done simply by running:
+
+\begin{verbatim}
+./server_rw < test/250_add_remove | tail -n 900 | less
+\end{verbatim}
+
+Of course, we should also expect an increase in speed for fine grained locking.  It turns out that this is only true for certain types of accesses of the database. Performance testing will be covered in the performance document.
+
+
+\end{document}
