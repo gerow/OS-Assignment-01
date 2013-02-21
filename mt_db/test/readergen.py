@@ -11,7 +11,7 @@ def choose_and_remove( items ):
 
 def main():
   keys = []
-  for i in range(5000):
+  for i in range(16536):
     keys.append(str(i))
 
   for i in range(50000):

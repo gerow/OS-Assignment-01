@@ -18,6 +18,7 @@
 #include <signal.h>
 #include <stdbool.h>
 #include <semaphore.h>
+#include <time.h>
 
 /* the encapsulation of a client thread, i.e., the thread that handles
  * commands from clients */
@@ -46,6 +47,8 @@ struct ThreadHandler {
 
 int g_started = 0;
 
+float g_timer;
+
 /* Interface with a client: get requests, carry them out and report results */
 void *client_run(void *);
 /* Interface to the db routines.  Pass a command, get a result */
@@ -60,6 +63,14 @@ static inline void abort_if_null(void *value, char *message) {
     fprintf(stdout, "Aborting and dumping core\n");
     abort();
   }
+}
+
+void start_timer() {
+  g_timer = (float)clock()/CLOCKS_PER_SEC;
+}
+
+float end_timer() {
+  return (float)clock()/CLOCKS_PER_SEC - g_timer;
 }
 
 /*
@@ -354,6 +365,18 @@ void handle_main_command(char *command)
       wait_for_clients_to_exit();
       fprintf(stdout, "now ready to take additional commands\n");
       break;
+    case 't':
+      // Start the timer
+      fprintf(stdout, "starting timer\n");
+      start_timer();
+      break;
+    case 'T':
+      {
+        // End the timer
+        float time_elapsed = end_timer();
+        fprintf(stdout, "%f seconds have elapsed since the timer started\n", time_elapsed);
+        break;
+      }
     default:
       fprintf(stdout, "ill-formed command\n");
       break;

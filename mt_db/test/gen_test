@@ -10,4 +10,35 @@ E test/gen_reader_07 /dev/null
 E test/gen_reader_08 /dev/null
 E test/gen_reader_09 /dev/null
 E test/gen_reader_10 /dev/null
+E test/gen_reader_01 /dev/null
+E test/gen_reader_02 /dev/null
+E test/gen_reader_03 /dev/null
+E test/gen_reader_04 /dev/null
+E test/gen_reader_05 /dev/null
+E test/gen_reader_06 /dev/null
+E test/gen_reader_07 /dev/null
+E test/gen_reader_08 /dev/null
+E test/gen_reader_09 /dev/null
+E test/gen_reader_10 /dev/null
+E test/gen_reader_01 /dev/null
+E test/gen_reader_02 /dev/null
+E test/gen_reader_03 /dev/null
+E test/gen_reader_04 /dev/null
+E test/gen_reader_05 /dev/null
+E test/gen_reader_06 /dev/null
+E test/gen_reader_07 /dev/null
+E test/gen_reader_08 /dev/null
+E test/gen_reader_09 /dev/null
+E test/gen_reader_10 /dev/null
+E test/gen_writer_02 /dev/null
+E test/gen_writer_03 /dev/null
+E test/gen_writer_04 /dev/null
+E test/gen_writer_05 /dev/null
+E test/gen_writer_06 /dev/null
+E test/gen_writer_07 /dev/null
+E test/gen_writer_08 /dev/null
+E test/gen_writer_09 /dev/null
+t
 g
+w
+T
