@@ -89,6 +89,8 @@ int add(char *name, char *value) {
 	if (strcmp(name, parent->name) < 0) parent->lchild = newnode;
 	else parent->rchild = newnode;
 
+        pthread_rwlock_unlock(&parent->rwlock);
+
 	return 1;
 }
 
@@ -115,8 +117,10 @@ int xremove(char *name) {
 			       can change that nodes children (see below). */
 
 	/* first, find the node to be removed */
+        pthread_rwlock_wrlock(&head.rwlock);
 	if (!(dnode = search(name, &head, &parent))) {
 	    /* it's not there */
+            pthread_rwlock_unlock(&parent->rwlock);
 	    return 0;
 	}
 
@@ -186,23 +190,42 @@ node_t *search(char *name, node_t * parent, node_t ** parentpp) {
     node_t *next;
     node_t *result;
 
+    // Right now we have a lock on the parent
+
     if (strcmp(name, parent->name) < 0) next = parent->lchild;
     else next = parent->rchild;
 
     if (next == NULL) {
-        pthread_rwlock_unlock(&parent->rwlock);
+        if (!parentpp) {
+          // If we're reading and the target is null just unlock
+          // everything.
+          pthread_rwlock_unlock(&parent->rwlock);
+        } else {
+          // Just do nothing (leave it write locked)
+        }
 	result = NULL;
     } else {
-        pthread_rwlock_rdlock(&next->rwlock);
-        pthread_rwlock_unlock(&parent->rwlock);
+        if (!parentpp) {
+          pthread_rwlock_rdlock(&next->rwlock);
+          pthread_rwlock_unlock(&parent->rwlock);
+        } else {
+          // If next is not null we need to lock it
+          pthread_rwlock_wrlock(&next->rwlock);
+        }
 	if (strcmp(name, next->name) == 0) {
 	    /* Note that this falls through to the if (parentpp .. ) statement
 	     * below. */
+            // If it's what we're looking for just keep a lock on both
+            // the target and its parent
 	    result = next;
 	} else {
 	    /* "We have to go deeper!" This recurses and returns from here
 	     * after the recursion has returned result and set parentpp */
             // Only unlock if we haven't found the final value
+            if (parentpp) {
+              // Otherwise we are going deeper, so unlock the parent
+              pthread_rwlock_unlock(&parent->rwlock);
+            }
 	    result = search(name, next, parentpp);
 	    return result;
 	}
