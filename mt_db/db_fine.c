@@ -133,7 +133,12 @@ int xremove(char *name) {
 	    else
 		parent->rchild = dnode->lchild;
 
+            // Unlock the parent
+            pthread_rwlock_unlock(&parent->rwlock);
+
 	    /* done with dnode */
+            // First, unlock it
+            pthread_rwlock_unlock(&dnode->rwlock);
 	    node_destroy(dnode);
 	} else if (dnode->lchild == 0) {
 	    /* ditto if the node had no left child */
@@ -142,7 +147,12 @@ int xremove(char *name) {
 	    else
 		parent->rchild = dnode->rchild;
 
+            // Unlock the parent
+            pthread_rwlock_unlock(&parent->rwlock);
+
 	    /* done with dnode */
+            // First, unlock it
+            pthread_rwlock_unlock(&dnode->rwlock);
 	    node_destroy(dnode);
 	} else {
 	    /* So much for the easy cases ...
@@ -160,15 +170,25 @@ int xremove(char *name) {
 	     * parent's lchild or rchild) */
 	    pnext = &dnode->rchild;
 	    next = *pnext;
+            pthread_rwlock_wrlock(&next->rwlock);
 	    while (next->lchild != 0) {
 		    /* work our way down the lchild chain, finding the smallest
 		     * node in the subtree. */
+                    // Get a write lock on the next one
+                    pthread_rwlock_wrlock(&next->lchild->rwlock);
+                    // Unlock the old one
+                    pthread_rwlock_unlock(&next->rwlock);
 		    pnext = &next->lchild;
 		    next = *pnext;
 	    }
 	    swap_pointers(&dnode->name, &next->name);
 	    swap_pointers(&dnode->value, &next->value);
 	    *pnext = next->rchild;
+
+            // Unlock everything
+            pthread_rwlock_unlock(&dnode->rwlock);
+            pthread_rwlock_unlock(&parent->rwlock);
+            pthread_rwlock_unlock(&next->rwlock);
 
 	    node_destroy(next);
     }
