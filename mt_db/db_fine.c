@@ -46,6 +46,7 @@ void node_destroy(node_t * node) {
      * case the node_destroy is called again. */
     if (node->name) {free(node->name); node->name = NULL; }
     if (node->value) { free(node->value); node->value = NULL; }
+    pthread_rwlock_destroy(&node->rwlock);
     free(node);
 }
 
