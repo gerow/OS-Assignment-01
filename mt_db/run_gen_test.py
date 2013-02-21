@@ -29,12 +29,14 @@ def main():
   servers = ["server_coarse", "server_rw", "server_fine"]
   times = {}
   n = 1
+  pct_done = 0.0
   if len(sys.argv) != 1:
     n = int(sys.argv[1])
   for server in servers:
     times[server] = []
     for i in range(n):
-      print "running trial " + str(i) + " on " + server
+      print "running trial " + str(i) + " on " + server + " (" + str(pct_done) + "%)"
+      pct_done += 100.0 * 1.0/(n * len(servers))
       time = run_server(server)
       times[server].append(time)
 
@@ -45,9 +47,7 @@ def main():
   print "statistics:"
   for server, time_list in times.iteritems():
     mean, stdv = meanstdv(time_list)
-    print server + "\t mean: " + str(mean) + " standard deviation: " + str(stdv)
-    if stdv > 0.5:
-      print "WARNING: This standard deviation seems relatively high.  You may want to make sure there aren't any background processes interfering with the test or you may want to try the test with more trials."
+    print server + "\t mean: " + str(mean) + "\t standard deviation: " + str(stdv)
 
 if __name__ == "__main__":
   main()
