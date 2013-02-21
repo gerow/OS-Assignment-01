@@ -77,6 +77,9 @@ int add(char *name, char *value) {
         pthread_rwlock_wrlock(&head.rwlock);
 	if ((target = search(name, &head, &parent))) {
 	    /* There is already a node with this key in the tree */
+            // So let's unlock both the target and the parent!
+            pthread_rwlock_unlock(&parent->rwlock);
+            pthread_rwlock_unlock(&target->rwlock);
 	    return 0;
 	}
 
