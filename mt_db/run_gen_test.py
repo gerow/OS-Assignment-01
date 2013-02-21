@@ -44,6 +44,9 @@ def main():
   for server, time_list in times.iteritems():
     for i, time_entry in enumerate(time_list):
       print "(" + str(i) + ") " + server + ": " + str(time_entry)
+  for server, time_list in times.iteritems():
+    if len(time_list) == 1:
+      sys.exit(0)
   print "statistics:"
   for server, time_list in times.iteritems():
     mean, stdv = meanstdv(time_list)
