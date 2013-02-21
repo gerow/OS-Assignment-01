@@ -44,6 +44,8 @@ struct ThreadHandler {
   pthread_cond_t threads_done_cond;
 };
 
+int g_started = 0;
+
 /* Interface with a client: get requests, carry them out and report results */
 void *client_run(void *);
 /* Interface to the db routines.  Pass a command, get a result */
@@ -64,7 +66,7 @@ static inline void abort_if_null(void *value, char *message) {
  * Create an interactive client - one with its own window.  This routine
  * creates the window (which starts the xterm and a process under it.  The
  * window is labelled with the ID passsed in.  On error, a NULL pointer is
- * returned and no process started.  The client data structure returned must be
+ * returned and no process g_started.  The client data structure returned must be
  * destroyed using client_destroy()
  */
 client_t *client_create(int ID) 
@@ -103,7 +105,8 @@ client_t *client_create_no_window(char *in, char *out)
   new_Client->done = false;
   new_Client->next = NULL;
   new_Client->thread_handler = &g_thread_handler;
-  new_Client->id = -1;
+  // Grab a new id
+  new_Client->id = g_started++;
 
   /* Creates a window and set up a communication channel with it */
   if( (new_Client->win = nowindow_create(in, outf))) return new_Client;
@@ -222,10 +225,9 @@ void launch_client_thread(client_t *c)
  */
 void create_client() 
 {
-  static int started = 0;
   client_t *c = NULL;
 
-  c = client_create(started++);
+  c = client_create(g_started++);
 
   // If the allocation failed we can't really do much...
   abort_if_null(c, "client_create() failed while creating client");
