@@ -102,4 +102,8 @@ In order to handle the w command we first get a lock on the clients list and, if
 
 Although not a command exactly, EOF is handled as requested in the assignment.  When we see an EOF we simply do the same thing as the w command (get a lock on the clients list and wait on a condition if it is not empty) except we exit after we block instead of waiting for new commands.
 
+\section{t and T Commands}
+
+In order to properly test the speed of the different implementations I have also added a t and T command.  Running the t command will start a kind of timer (basically it will just record the current time as accurately as we can). If we later call the T command it will determine the amount of time that has passed since t was last called and the spit that value out to stdout. This is useful for accurately measuring the amount of time an implementation takes on a given data set.
+
 \end{document}
