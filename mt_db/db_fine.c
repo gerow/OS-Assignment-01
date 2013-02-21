@@ -7,8 +7,6 @@
 
 /* Forward declaration */
 node_t *search(char *, node_t *, node_t **);
-node_t *query_search(char *name);
-node_t *add_search(char *name, node_t ** parentpp);
 
 node_t head = { "", "", 0, 0 };
 /*
@@ -56,7 +54,8 @@ void node_destroy(node_t * node) {
 void query(char *name, char *result, int len) {
     node_t *target;
 
-    target = query_search(name);
+    pthread_rwlock_rdlock(&head.rwlock);
+    target = search(name, &head, NULL);
 
     if (!target) {
 	strncpy(result, "not found", len - 1);
@@ -75,6 +74,7 @@ int add(char *name, char *value) {
 	node_t *target;	    /* The existing node with key name if any */
 	node_t *newnode;    /* The new node to add */
 
+        pthread_rwlock_wrlock(&head.rwlock);
 	if ((target = search(name, &head, &parent))) {
 	    /* There is already a node with this key in the tree */
 	    return 0;
@@ -214,15 +214,6 @@ node_t *search(char *name, node_t * parent, node_t ** parentpp) {
     return (result);
 }
 
-node_t *query_search(char *name) {
-  pthread_rwlock_rdlock(&head.rwlock);
-  return search(name, &head, NULL);
-}
-
-node_t *add_search(char *name, node_t ** parentpp) {
-
-}
-
 /*
  * Parse the command in command, execute it on the DB rooted at head and return
  * a string describing the results.  Response must be a writable string that
@@ -233,6 +224,13 @@ void interpret_command(char *command, char *response, int len)
     char value[256];
     char ibuf[256];
     char name[256];
+
+    static int init = 0;
+
+    if (!init) {
+      pthread_rwlock_init(&head.rwlock, NULL);
+      init = 1;
+    }
 
     if (strlen(command) <= 1) {
 	strncpy(response, "ill-formed command", len - 1);
