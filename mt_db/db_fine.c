@@ -29,8 +29,13 @@ node_t *node_create(char *arg_name, char *arg_value, node_t * arg_left,
 	free(new_node);
 	return NULL;
     }
-
+    #ifdef __linux
+    pthread_rwlockattr_t attr;
+    pthread_rwlockattr_setkind_np(&attr, PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP);
+    pthread_rwlock_init(&new_node->rwlock, &attr);
+    #else
     pthread_rwlock_init(&new_node->rwlock, NULL);
+    #endif /*  __linux */
 
     strcpy(new_node->name, arg_name);
     strcpy(new_node->value, arg_value);
@@ -275,7 +280,13 @@ void interpret_command(char *command, char *response, int len)
     static int init = 0;
 
     if (!init) {
+      #ifdef __linux
+      pthread_rwlockattr_t attr;
+      pthread_rwlockattr_setkind_np(&attr, PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP);
+      pthread_rwlock_init(&head.rwlock, &attr);
+      #else
       pthread_rwlock_init(&head.rwlock, NULL);
+      #endif /* __linux */
       init = 1;
     }
 

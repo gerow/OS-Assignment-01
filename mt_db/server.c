@@ -453,7 +453,7 @@ void init_thread_handler(thread_handler_t* t)
 
 int main(int argc, char *argv[]) 
 {
-  char* command;
+  char* command = NULL;
   size_t command_nbytes = 100;
   command = malloc(command_nbytes + 1);
   abort_if_null(command, "malloc() failed when allocating command");
