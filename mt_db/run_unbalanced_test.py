@@ -51,6 +51,11 @@ def main():
   for server, time_list in times.iteritems():
     mean, stdv = meanstdv(time_list)
     print server + "\t mean: " + str(mean) + "\t standard deviation: " + str(stdv)
+  for server, time_list in times.iteritems():
+    with open("documentation/unbalanced_" + server + ".data", "w") as f:
+      for time in time_list:
+        f.write(str(time) + "\n")
+
 
 if __name__ == "__main__":
   main()

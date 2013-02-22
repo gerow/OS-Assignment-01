@@ -11,3 +11,8 @@ rw:
 
 fine:
 	pdflatex fine.tex
+
+graphs:
+
+performance: graphs
+	pdflatex fine.tex

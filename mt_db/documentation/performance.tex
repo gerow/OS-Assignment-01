@@ -56,7 +56,7 @@
 \normalfont \normalsize 
 \textsc{University of Southern California} \\ [25pt] % Your university, school and/or department name(s)
 \horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
-\huge CS402 Assignment 01 -- Read/Write Locking \\ % The assignment title
+\huge CS402 Assignment 01 -- Coarse Grained Locking \\ % The assignment title
 \horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
 }
 
@@ -72,17 +72,17 @@
 %	PROBLEM 1
 %----------------------------------------------------------------------------------------
 
-\section{Read Write Locking}
-Read write locking is implemented similarly to coarse grained locking in that we only have on global lock for the entire table, but instaed of using a pthread\_mutex\_t we instead use a pthread\_rwlock\_t. This allows us to use the functions pthread\_rwlock\_rdlock in order to get a read lock and pthread\_rwlock\_wrlock in order to get a write lock.
+\section{Coarse Grained Locking}
+The coarase grained locking for the database is quite simple.  We only have one global mutex for the entire tree and lock and unlock it from within the query, add, and xremove functions.
 
 \subsection{Testing}
-We test the correctness of the read write lock similarly to the corarse grained lock, using the test that adds a lot of elements to the database and then removes them, which should leave us with an empty database. This can, like with coarse, be done simply by running:
+I have a few methods for testing coarse grained.  First I tried simply calling 250 instances of the build in test2 and unpausing them all at the same time just to see if it ran though.  After that I constructed a test that adds a series of numbers to the database, queries them, and then deletes them all. I then ran this with 250 instances.  Because of the way the adds and removes are set up we should end up with an empty database at the end no matter what order the clients executed in, and sure enough we do.
+
+This specific test can be run using this command (from within the mt\_db directory):
 
 \begin{verbatim}
-./server_rw < test/250_add_remove | tail -n 900 | less
+./server_coarse < test/250_add_remove | tail -n 900 | less
 \end{verbatim}
 
-Of course, we should also expect an increase in speed for read write locking.  It turns out that this is only true for certain types of accesses of the database. Performance testing will be covered in the performance document.
-
-
+The tail and less command are only there to grab the final dump of the database so that we can verify that the database is in fact empty.
 \end{document}
