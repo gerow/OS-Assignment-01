@@ -17,3 +17,6 @@ graphs:
 
 performance: graphs
 	pdflatex performance.tex
+
+cleanup:
+	rm *.aux *.log

@@ -73,7 +73,7 @@
 %----------------------------------------------------------------------------------------
 
 \section{Coarse Grained Locking}
-The coarase grained locking for the database is quite simple.  We only have one global mutex for the entire tree and lock and unlock it from within the query, add, and xremove functions.
+The coarse grained locking for the database is quite simple.  We only have one global mutex for the entire tree and lock and unlock it from within the query, add, and xremove functions.
 
 \subsection{Testing}
 I have a few methods for testing coarse grained.  First I tried simply calling 250 instances of the build in test2 and unpausing them all at the same time just to see if it ran though.  After that I constructed a test that adds a series of numbers to the database, queries them, and then deletes them all. I then ran this with 250 instances.  Because of the way the adds and removes are set up we should end up with an empty database at the end no matter what order the clients executed in, and sure enough we do.

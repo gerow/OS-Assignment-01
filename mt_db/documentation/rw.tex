@@ -73,10 +73,10 @@
 %----------------------------------------------------------------------------------------
 
 \section{Read Write Locking}
-Read write locking is implemented similarly to coarse grained locking in that we only have on global lock for the entire table, but instaed of using a pthread\_mutex\_t we instead use a pthread\_rwlock\_t. This allows us to use the functions pthread\_rwlock\_rdlock in order to get a read lock and pthread\_rwlock\_wrlock in order to get a write lock.
+Read write locking is implemented similarly to coarse grained locking in that we only have on global lock for the entire table, but instead of using a pthread\_mutex\_t we instead use a pthread\_rwlock\_t. This allows us to use the functions pthread\_rwlock\_rdlock in order to get a read lock and pthread\_rwlock\_wrlock in order to get a write lock.
 
 \subsection{Testing}
-We test the correctness of the read write lock similarly to the corarse grained lock, using the test that adds a lot of elements to the database and then removes them, which should leave us with an empty database. This can, like with coarse, be done simply by running:
+We test the correctness of the read write lock similarly to the coarse grained lock, using the test that adds a lot of elements to the database and then removes them, which should leave us with an empty database. This can, like with coarse, be done simply by running:
 
 \begin{verbatim}
 ./server_rw < test/250_add_remove | tail -n 900 | less
