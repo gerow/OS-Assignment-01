@@ -9,6 +9,11 @@ E test/unbalanced_writer_4
 E test/unbalanced_writer_5
 E test/unbalanced_writer_6
 E test/unbalanced_writer_7
+E test/unbalanced_reader_01
+E test/unbalanced_reader_02
+E test/unbalanced_reader_03
+E test/unbalanced_reader_04
+E test/unbalanced_reader_05
 t
 g
 w
