@@ -1,0 +1,7 @@
+Hello grader!
+
+Nothing huge has been changed about the code, although I do have a few python scripts in the root of this project's directory.  Most of these are for testing the code and performing benchmarking.
+
+All the documentation can be found in the documentation directory. There are a number of other files in there for generating the documentation, but the pdfs are already generated so you can probably ignore most of the files in there other than commands.pdf, coarse.pdf, rw.pdf, fine.pdf and performance.pdf
+
+Also, sorry for the size of the test directory.  I have a number of randomly generated tests in there that I found useful during development.
