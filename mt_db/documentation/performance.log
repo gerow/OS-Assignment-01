@@ -1,8 +1,8 @@
 This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.2.18)  22 FEB 2013 00:10
 entering extended mode
  %&-line parsing enabled.
-**coarse.tex
-(./coarse.tex
+**performance.tex
+(./performance.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
 yphenation, farsi, arabic, croatian, bulgarian, ukrainian, russian, czech, slov
@@ -370,10 +370,31 @@ Package: amsthm 2004/08/06 v2.20
 \thm@headsep=\skip52
 \dth@everypar=\toks25
 )
+(/usr/share/texmf-texlive/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf-texlive/tex/latex/graphics/graphics.sty
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf-texlive/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/etc/texmf/tex/latex/config/graphics.cfg
+File: graphics.cfg 2009/08/28 v1.8 graphics configuration of TeX Live
+)
+Package graphics Info: Driver file: pdftex.def on input line 91.
+
+(/usr/share/texmf-texlive/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2010/03/12 v0.04p Graphics/color for pdfTeX
+\Gread@gobject=\count101
+))
+\Gin@req@height=\dimen113
+\Gin@req@width=\dimen114
+)
 (/usr/share/texmf-texlive/tex/latex/lipsum/lipsum.sty
 Package: lipsum 2005/01/26 v1.0 150 paragraphs of Lorem Ipsum dummy text
 File: lipsum.dtx 2005/01/26 v1.0 150 paragraphs of Lorem Ipsum dummy text
-\c@lips@count=\count101
+\c@lips@count=\count102
 )
 (/usr/share/texmf-texlive/tex/latex/sectsty/sectsty.sty
 Package: sectsty 2002/02/25 v2.0.2 Commands to change all sectional heading sty
@@ -389,113 +410,178 @@ les
 \f@ncyO@erf=\skip59
 \f@ncyO@olf=\skip60
 \f@ncyO@orf=\skip61
-) (./coarse.aux)
-\openout1 = `coarse.aux'.
+) (./performance.aux)
+\openout1 = `performance.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for FML/futm/m/it on input line 67.
-LaTeX Font Info:    Try loading font information for FML+futm on input line 67.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 70.
+LaTeX Font Info:    ... okay on input line 70.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 70.
+LaTeX Font Info:    ... okay on input line 70.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 70.
+LaTeX Font Info:    ... okay on input line 70.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 70.
+LaTeX Font Info:    ... okay on input line 70.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 70.
+LaTeX Font Info:    ... okay on input line 70.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 70.
+LaTeX Font Info:    ... okay on input line 70.
+LaTeX Font Info:    Checking defaults for FML/futm/m/it on input line 70.
+LaTeX Font Info:    Try loading font information for FML+futm on input line 70.
 
 
 (/usr/share/texmf-texlive/tex/latex/fourier/fmlfutm.fd
 File: fmlfutm.fd 2004/10/30 Fontinst v1.926 font definitions for FML/futm.
 )
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for FMS/futm/m/n on input line 67.
-LaTeX Font Info:    Try loading font information for FMS+futm on input line 67.
+LaTeX Font Info:    ... okay on input line 70.
+LaTeX Font Info:    Checking defaults for FMS/futm/m/n on input line 70.
+LaTeX Font Info:    Try loading font information for FMS+futm on input line 70.
 
 
 (/usr/share/texmf-texlive/tex/latex/fourier/fmsfutm.fd
 File: fmsfutm.fd 2004/10/30 Fontinst v1.926 font definitions for FMS/futm.
 )
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for FMX/futm/m/n on input line 67.
-LaTeX Font Info:    Try loading font information for FMX+futm on input line 67.
+LaTeX Font Info:    ... okay on input line 70.
+LaTeX Font Info:    Checking defaults for FMX/futm/m/n on input line 70.
+LaTeX Font Info:    Try loading font information for FMX+futm on input line 70.
 
 
 (/usr/share/texmf-texlive/tex/latex/fourier/fmxfutm.fd
 File: fmxfutm.fd futm-extension
 )
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 67.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 67.
+LaTeX Font Info:    ... okay on input line 70.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 70.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 70.
 
 (/usr/share/texmf-texlive/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Try loading font information for T1+futs on input line 67.
+LaTeX Font Info:    ... okay on input line 70.
+LaTeX Font Info:    Try loading font information for T1+futs on input line 70.
 
 (/usr/share/texmf-texlive/tex/latex/fourier/t1futs.fd
 File: t1futs.fd 2004/03/02 Fontinst v1.926 font definitions for T1/futs.
 )
-LaTeX Font Info:    Try loading font information for T1+cmss on input line 70.
-
-(/usr/share/texmf-texlive/tex/latex/base/t1cmss.fd
+(/usr/share/texmf-texlive/tex/context/base/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count103
+\scratchdimen=\dimen115
+\scratchbox=\box29
+\nofMPsegments=\count104
+\nofMParguments=\count105
+\everyMPshowfont=\toks26
+\MPscratchCnt=\count106
+\MPscratchDim=\dimen116
+\MPnumerator=\count107
+\everyMPtoPDFconversion=\toks27
+)
+LaTeX Font Info:    Try loading font information for T1+cmss on input line 73.
+ (/usr/share/texmf-texlive/tex/latex/base/t1cmss.fd
 File: t1cmss.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    Try loading font information for FML+futmi on input line 70
+LaTeX Font Info:    Try loading font information for FML+futmi on input line 73
 .
 
 (/usr/share/texmf-texlive/tex/latex/fourier/fmlfutmi.fd
 File: fmlfutmi.fd 2004/10/30 Fontinst v1.926 font definitions for FML/futmi.
 )
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 13.24796pt on input line 70.
+(Font)              scaled to size 13.24796pt on input line 73.
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 9.19998pt on input line 70.
+(Font)              scaled to size 9.19998pt on input line 73.
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 7.35999pt on input line 70.
+(Font)              scaled to size 7.35999pt on input line 73.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 13.24796pt on input line 70.
+(Font)              scaled to size 13.24796pt on input line 73.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 9.19998pt on input line 70.
+(Font)              scaled to size 9.19998pt on input line 73.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 7.35999pt on input line 70.
-LaTeX Font Info:    Try loading font information for U+msa on input line 70.
+(Font)              scaled to size 7.35999pt on input line 73.
+LaTeX Font Info:    Try loading font information for U+msa on input line 73.
 
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 70.
+LaTeX Font Info:    Try loading font information for U+msb on input line 73.
 
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 83.
+Overfull \hbox (28.86842pt too wide) in paragraph at lines 83--84
+\T1/futs/m/n/10.95 dard de-vi-a-tion of the runs. These can be in-voked with ru
+n_unbalanced_test.py and run_gen_test.py. 
+ []
+
+
+Overfull \hbox (3.77103pt too wide) in paragraph at lines 90--91
+\T1/futs/m/n/10.95 the num-ber of tri-als you would like to try. This es-sen-ti
+ally pipes the file at test/unbalanced_test
+ []
+
+[1
+
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 93.
 
 (/usr/share/texmf-texlive/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-) [1
+)
+<unbalanced_server_coarse_final.png, id=6, 642.4pt x 481.8pt>
+File: unbalanced_server_coarse_final.png Graphic file (type png)
 
+<use unbalanced_server_coarse_final.png>
+<unbalanced_server_rw_final.png, id=7, 642.4pt x 481.8pt>
+File: unbalanced_server_rw_final.png Graphic file (type png)
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./coarse.aux) ) 
+<use unbalanced_server_rw_final.png>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<unbalanced_server_fine_final.png, id=8, 642.4pt x 481.8pt>
+File: unbalanced_server_fine_final.png Graphic file (type png)
+
+<use unbalanced_server_fine_final.png>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[2 <./unbalanced_server_coarse_final.png (PNG copy)>] [3 <./unbalanced_server_r
+w_final.png (PNG copy)>] [4 <./unbalanced_server_fine_final.png (PNG copy)>]
+<gen_server_coarse_final.png, id=23, 642.4pt x 481.8pt>
+File: gen_server_coarse_final.png Graphic file (type png)
+
+<use gen_server_coarse_final.png>
+<gen_server_rw_final.png, id=24, 642.4pt x 481.8pt>
+File: gen_server_rw_final.png Graphic file (type png)
+
+<use gen_server_rw_final.png>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<gen_server_fine_final.png, id=25, 642.4pt x 481.8pt>
+File: gen_server_fine_final.png Graphic file (type png)
+
+<use gen_server_fine_final.png>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[5 <./gen_server_coarse_final.png (PNG copy)>] [6 <./gen_server_rw_final.png (P
+NG copy)>] [7 <./gen_server_fine_final.png (PNG copy)>] (./performance.aux) ) 
 Here is how much of TeX's memory you used:
- 3596 strings out of 493848
- 48627 string characters out of 1152823
- 204138 words of memory out of 3000000
- 6810 multiletter control sequences out of 15000+50000
- 54542 words of font info for 62 fonts, out of 3000000 for 9000
+ 4309 strings out of 493848
+ 58646 string characters out of 1152823
+ 217526 words of memory out of 3000000
+ 7492 multiletter control sequences out of 15000+50000
+ 59103 words of font info for 65 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
- 35i,10n,43p,526b,223s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/shar
-e/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/usr/share/texmf-texlive/font
-s/enc/dvips/base/8r.enc}</usr/share/texmf-texlive/fonts/type1/adobe/utopia/putr
-8a.pfb></usr/share/texmf/fonts/type1/public/cm-super/sftt1095.pfb>
-Output written on coarse.pdf (1 page, 50495 bytes).
+ 35i,11n,43p,701b,340s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/
+usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}{/usr/share/texmf/fonts/enc
+/dvips/cm-super/cm-super-t1.enc}</usr/share/texmf-texlive/fonts/type1/adobe/uto
+pia/putr8a.pfb></usr/share/texmf-texlive/fonts/type1/adobe/utopia/putri8a.pfb><
+/usr/share/texmf/fonts/type1/public/cm-super/sftt1095.pfb>
+Output written on performance.pdf (7 pages, 103394 bytes).
 PDF statistics:
- 16 PDF objects out of 1000 (max. 8388607)
+ 52 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 31 words of extra memory for PDF output out of 10000 (max. 10000000)
 

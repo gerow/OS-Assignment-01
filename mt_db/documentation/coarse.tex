@@ -85,4 +85,6 @@ This specific test can be run using this command (from within the mt\_db directo
 \end{verbatim}
 
 The tail and less command are only there to grab the final dump of the database so that we can verify that the database is in fact empty.
+
+Of course, manually scanning all these results can be a little tiring and can take a long time, so I wrote a little python script (called test.py) that will take care of this for you. It runs all three of the locking methods five times each and verifies that the database is in the correct state afterwards and prints "PASSED" if it is good.  Otherwise it prints "FAILED".
 \end{document}

@@ -1,4 +1,4 @@
-all: commands coarse rw fine
+all: commands coarse rw fine performance
 
 commands:
 	pdflatex commands.tex
@@ -13,6 +13,7 @@ fine:
 	pdflatex fine.tex
 
 graphs:
+	gnuplot < all_graphs.plot
 
 performance: graphs
-	pdflatex fine.tex
+	pdflatex performance.tex
