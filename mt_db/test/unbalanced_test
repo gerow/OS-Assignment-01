@@ -14,6 +14,9 @@ E test/unbalanced_reader_02
 E test/unbalanced_reader_03
 E test/unbalanced_reader_04
 E test/unbalanced_reader_05
+E test/unbalanced_reader_06
+E test/unbalanced_reader_07
+E test/unbalanced_reader_08
 t
 g
 w
