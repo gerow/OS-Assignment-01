@@ -9,7 +9,6 @@ E test/gen_writer_07 /dev/null
 E test/gen_writer_08 /dev/null
 E test/gen_writer_09 /dev/null
 E test/gen_writer_10 /dev/null
-E test/gen_reader_00 /dev/null
 E test/gen_reader_01 /dev/null
 E test/gen_reader_02 /dev/null
 E test/gen_reader_03 /dev/null
